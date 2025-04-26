@@ -1,0 +1,6 @@
+[submodule "subprojects/sglib"]
+	path = subprojects/sglib
+	url = https://github.com/Nor-s/sglib.git
+[submodule "subprojects/thorvg"]
+	path = subprojects/thorvg
+	url = https://github.com/Nor-s/thorvg.git
