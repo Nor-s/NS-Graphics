@@ -6,7 +6,21 @@ project(Imgui)
 set(IMGUI_PATH ${CMAKE_CURRENT_SOURCE_DIR})
     
 # Compile as static library 
-file(GLOB IMGUI_SOURCES ${IMGUI_PATH}/*.cpp) 
+file(GLOB IMGUI_SOURCES 
+    ${IMGUI_PATH}/GraphEditor.cpp
+    ${IMGUI_PATH}/ImCurveEdit.cpp
+    ${IMGUI_PATH}/ImGradient.cpp
+    ${IMGUI_PATH}/imgui_demo.cpp
+    ${IMGUI_PATH}/imgui_draw.cpp
+    ${IMGUI_PATH}/imgui_tables.cpp
+    ${IMGUI_PATH}/imgui_widgets.cpp
+    ${IMGUI_PATH}/imgui.cpp
+    ${IMGUI_PATH}/ImGuizmo.cpp
+    ${IMGUI_PATH}/ImSequencer.cpp
+
+    ${IMGUI_PATH}/imgui_impl_opengl3.cpp
+    ${IMGUI_PATH}/imgui_impl_sdl2.cpp
+) 
 set(IMGUI_ICONS
         icons/icons.cpp
         icons/folder.cpp
@@ -26,5 +40,7 @@ set(IMGUI_INC_DIRS
     ${IMGUI_PATH}/icons
 )
 add_library(imgui STATIC ${IMGUI_SOURCES} ${IMGUI_ICONS} ImGuiFileDialog/ImGuiFileDialog.cpp)
-target_include_directories(imgui PUBLIC ${IMGUI_INC_DIRS})
-target_link_libraries(imgui PUBLIC glfw)
+find_package(SDL2 REQUIRED)
+target_include_directories(imgui PUBLIC ${IMGUI_INC_DIRS} ${SDL2_INCLUDE_DIRS})
+# target_link_libraries(imgui PUBLIC glfw)
+target_link_libraries(imgui PUBLIC ${SDL2_LIBRARIES})
