@@ -91,10 +91,30 @@ void SDLWindow::processEvent(SystemIO& io)
 		}
 		break;
 	}
-	imguiLayer_->predraw();
-	imguiLayer_->draw();
+}
 
+void SDLWindow::predraw(SystemIO& io)
+{
+	static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    glViewport(0, 0, (int) appContext_.width, (int) appContext_.height);
+	glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w,
+				 clear_color.w);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	imguiLayer_->predraw();
+}
+void SDLWindow::draw(SystemIO& io)
+{
+	imguiLayer_->draw();
+}
+void SDLWindow::postdraw(SystemIO& io)
+{
 	imguiLayer_->postdraw();
+}
+void SDLWindow::addImguiModule(std::unique_ptr<IImguiModule> module)
+{
+	imguiLayer_->addModule(std::move(module));
 }
 
 }	 // namespace ns::editor
+

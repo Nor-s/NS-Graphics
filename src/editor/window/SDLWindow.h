@@ -14,6 +14,7 @@
 namespace ns::editor
 {
 class ImguiLayer;
+class IImguiModule;
 
 class SDLWindow
 {
@@ -24,6 +25,11 @@ public:
     SDL_Window* getHandle(){return handle_;}
     SDL_GLContext& getGLContext(){return context_;}
     void processEvent(SystemIO& io);
+    void predraw(SystemIO& io);
+    void draw(SystemIO& io);
+    void postdraw(SystemIO& io);
+
+    void addImguiModule(std::unique_ptr<IImguiModule> imguiModule);
 
 private:
     void initGL();
@@ -36,6 +42,7 @@ private:
 
     std::unique_ptr<ImguiLayer> imguiLayer_;
 };
+
 
 }	 // namespace ns::editor
 #endif

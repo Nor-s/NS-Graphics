@@ -4,6 +4,8 @@
 #include "imgui/imguiLayer.h"
 #include "window/SDLWindow.h"
 
+#include "imgui/imguiWindow.h"
+
 namespace ns::editor
 {
 
@@ -21,6 +23,9 @@ void App::run()
 	while(!context.done)
 	{
 		sdlWindow_->processEvent(context);
+		sdlWindow_->predraw(context);
+		sdlWindow_->draw(context);
+		sdlWindow_->postdraw(context);
 	}
 }
 
@@ -30,6 +35,10 @@ void App::initWindow()
 	{
 		sdlWindow_ = std::make_unique<SDLWindow>(appContext_, sysContext_);
 	}
+
+	sdlWindow_->addImguiModule(std::make_unique<ImguiWindow>(ImguiWindow::Context{
+		.title="properties"
+	}));
 }
 
 }	 // namespace ns::editor

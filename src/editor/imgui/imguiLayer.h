@@ -1,7 +1,10 @@
 #ifndef _NS_GRAPHICS_IMGUILAYER_H_
 #define _NS_GRAPHICS_IMGUILAYER_H_
 
+#include <vector>
+#include <memory>
 #include "../common/env.h"
+#include "imguiModule.h"
 
 namespace ns::editor
 {
@@ -18,7 +21,7 @@ protected:
     void draw();
     void postdraw();
 
-
+    void addModule(std::unique_ptr<IImguiModule> module);
 
 private:
 	void init();
@@ -27,6 +30,8 @@ private:
 private:
     SystemContext context_;
     SDLWindow* r_window_;
+
+    std::vector<std::unique_ptr<IImguiModule>> modules_;
 };
 }	 // namespace ns::editor
 
