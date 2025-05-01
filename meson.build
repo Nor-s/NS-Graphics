@@ -47,6 +47,7 @@ src_file =[
 'src/editor/window/SDLWindow.cpp',
 'src/editor/imgui/imguiLayer.cpp',
 'src/editor/imgui/imguiWindow.cpp',
+'src/editor/imgui/imguiTextEditor.cpp',
 ]
 
 nsgraphics_dep = declare_dependency(

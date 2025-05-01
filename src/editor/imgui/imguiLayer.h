@@ -21,6 +21,8 @@ protected:
     void draw();
     void postdraw();
 
+    void drawDoc();
+    void setDocMode(bool bIsDocMode = true);
     void addModule(std::unique_ptr<IImguiModule> module);
 
 private:
@@ -30,6 +32,8 @@ private:
 private:
     SystemContext context_;
     SDLWindow* r_window_;
+
+    bool bIsDocMode_ = true;
 
     std::vector<std::unique_ptr<IImguiModule>> modules_;
 };

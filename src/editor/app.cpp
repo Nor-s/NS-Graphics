@@ -5,6 +5,7 @@
 #include "window/SDLWindow.h"
 
 #include "imgui/imguiWindow.h"
+#include "imgui/imguiTextEditor.h"
 
 namespace ns::editor
 {
@@ -37,8 +38,12 @@ void App::initWindow()
 	}
 
 	sdlWindow_->addImguiModule(std::make_unique<ImguiWindow>(ImguiWindow::Context{
-		.title="properties"
+		.title="preview"
 	}));
+	sdlWindow_->addImguiModule(std::make_unique<ImguiWindow>(ImguiWindow::Context{
+		.title="scene"
+	}));
+	sdlWindow_->addImguiModule(std::make_unique<ImguiTextEditor>());
 }
 
 }	 // namespace ns::editor

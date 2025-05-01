@@ -4,3 +4,6 @@
 [submodule "subprojects/thorvg"]
 	path = subprojects/thorvg
 	url = https://github.com/Nor-s/thorvg.git
+[submodule "subprojects/imgui/textEditor"]
+	path = subprojects/imgui/textEditor
+	url = https://github.com/Nor-s/ImGuiColorTextEdit.git
