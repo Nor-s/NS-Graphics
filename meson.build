@@ -1,5 +1,5 @@
 project('NS-Graphics', 'cpp',
-    default_options:['cpp_std=c++20']
+    default_options:['cpp_std=c++23']
 )
 
 # For Dependency
@@ -41,8 +41,7 @@ nsgraphics_dep =[
 
 
 # Src Files
-src_file =[
-'src/editor/main.cpp',
+nsgraphics_src =[
 'src/editor/app.cpp',
 'src/editor/window/SDLWindow.cpp',
 'src/editor/imgui/imguiLayer.cpp',
@@ -53,12 +52,16 @@ src_file =[
 nsgraphics_dep = declare_dependency(
    dependencies        : nsgraphics_dep,
    include_directories : include_directories('./src', './src/core', './src/editor'),
-   sources             : src_file
+   sources             : nsgraphics_src
 )
 
+
+
 # Define Exe
-executable('NS-Graphics', 
-    src_file,
+ns_graphics_lib = library('ns_graphics', 
+    nsgraphics_src,
     dependencies: nsgraphics_dep
 )
 
+
+subdir('src/example/VoxelShaderToy')

@@ -25,7 +25,7 @@ public:
 	virtual void run();
 
 private:
-    void initWindow();
+    virtual void initWindow();
 
 private:
     AppContext appContext_;
