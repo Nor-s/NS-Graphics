@@ -9,7 +9,8 @@ sglib_dep = sglib_cmake.dependency('sglib').as_link_whole()
 spdlog_dep = dependency('spdlog', required: true)
 sdl2_dep = dependency('sdl2')
 imgui_dep = cmake.subproject('imgui').dependency('imgui')
-
+lua_proj = subproject('lua')
+lua_dep = lua_proj.get_variable('lua_dep')
 
 
 # Set GL
@@ -36,7 +37,8 @@ nsgraphics_dep =[
     spdlog_dep,
     sdl2_dep,
     gl_dep,
-    imgui_dep
+    imgui_dep,
+    lua_dep
 ]
 
 
@@ -65,4 +67,3 @@ ns_graphics_lib = library('ns_graphics',
 
 
 subdir('src/example/VoxelShaderToy')
-subproject('lua')

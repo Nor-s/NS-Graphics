@@ -14,7 +14,7 @@ class App
 {
 public:
     App();
-    ~App();
+    virtual ~App();
 
 	void init(AppContext appContext, SystemContext systemContext)
 	{
@@ -24,14 +24,19 @@ public:
 	}
 	virtual void run();
 
+protected:
+    virtual void addImguiModule(){}
+
+protected:
+    std::unique_ptr<SDLWindow> sdlWindow_;
+
 private:
-    virtual void initWindow();
+    void initWindow();
 
 private:
     AppContext appContext_;
     SystemContext sysContext_;
 
-    std::unique_ptr<SDLWindow> sdlWindow_;
 };
 
 }	 // namespace ns::editor

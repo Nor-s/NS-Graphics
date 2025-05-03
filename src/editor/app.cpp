@@ -36,14 +36,7 @@ void App::initWindow()
 	{
 		sdlWindow_ = std::make_unique<SDLWindow>(appContext_, sysContext_);
 	}
-
-	sdlWindow_->addImguiModule(std::make_unique<ImguiWindow>(ImguiWindow::Context{
-		.title="preview"
-	}));
-	sdlWindow_->addImguiModule(std::make_unique<ImguiWindow>(ImguiWindow::Context{
-		.title="scene"
-	}));
-	sdlWindow_->addImguiModule(std::make_unique<ImguiTextEditor>());
+	addImguiModule();
 }
 
 }	 // namespace ns::editor

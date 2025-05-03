@@ -1,20 +1,23 @@
 #include <iostream>
 #include <sglib.h>
-#include "app.h"
+#include "VST.h"
 
 using namespace ns::editor;
+using namespace vst;
 
 int main()
 {
 	sglib::Logger::SetLogPrefix("NS-Graphics");
 
-	auto app = App();
+	App* app = new VST;
 	auto appContext = AppContext{.title = "Voxel Shader Toy", .width = 800, .height = 600};
 	auto systemContext = SystemContext{
 		.windowEnv = WindowEnv::SDL2,
 		.gpuEnv = GPUEnv::OPENGL,
 	};
 
-	app.init(appContext, systemContext);
-	app.run();
+	app->init(appContext, systemContext);
+	app->run();
+
+	delete app;
 }
