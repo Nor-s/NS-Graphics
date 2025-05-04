@@ -67,3 +67,4 @@ ns_graphics_lib = library('ns_graphics',
 
 
 subdir('src/example/VoxelShaderToy')
+subdir('src/example/LuaTest')
