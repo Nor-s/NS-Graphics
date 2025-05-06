@@ -2,6 +2,7 @@
 #define _NS_GRAPHICS_ENGINE_
 
 #include "platform/platformEvent.h"
+#include "common/nsTime.h"
 
 
 #endif

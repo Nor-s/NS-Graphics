@@ -6,9 +6,11 @@ namespace ns
 
 struct SystemIO
 {
-    bool done=false;
+	bool done = false;
+	double deltaTime;
+	double globalTime;
 };
 
-}
+}	 // namespace ns
 
 #endif

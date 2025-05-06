@@ -1,6 +1,6 @@
 #include "app.h"
 
-#include <nengine.h>		
+#include <nengine.h>
 #include "imgui/imguiLayer.h"
 #include "window/SDLWindow.h"
 
@@ -10,8 +10,8 @@
 namespace ns::editor
 {
 
-App::App(){
-
+App::App()
+{
 }
 
 App::~App()
@@ -20,13 +20,23 @@ App::~App()
 
 void App::run()
 {
-	SystemIO context;
-	while(!context.done)
+	Timer timer;
+	SystemIO& context = io_;
+	while (!context.done)
 	{
 		sdlWindow_->processEvent(context);
+
 		sdlWindow_->predraw(context);
+		predraw();
+
 		sdlWindow_->draw(context);
+		draw();
+
 		sdlWindow_->postdraw(context);
+		postdraw();
+
+		context.deltaTime = timer.elapsed();
+		context.globalTime = timer.duration();
 	}
 }
 

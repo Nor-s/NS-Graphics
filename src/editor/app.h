@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include "common/env.h"
+#include "platform/platformEvent.h"
 
 namespace ns::editor
 {
@@ -13,30 +14,39 @@ class SDLWindow;
 class App
 {
 public:
-    App();
-    virtual ~App();
+	App();
+	virtual ~App();
 
 	void init(AppContext appContext, SystemContext systemContext)
 	{
-        appContext_ = std::move(appContext);
-        sysContext_ = std::move(systemContext);
-        initWindow();
+		initBegin();
+		appContext_ = std::move(appContext);
+		sysContext_ = std::move(systemContext);
+		initWindow();
+		initEnd();
 	}
 	virtual void run();
 
 protected:
-    virtual void addImguiModule(){}
+	virtual void initBegin() {};
+	virtual void initEnd() {};
+	virtual void addImguiModule()
+	{
+	}
+	virtual void predraw() {};
+	virtual void draw()
+	{
+	}
+	virtual void postdraw() {};
 
 protected:
-    std::unique_ptr<SDLWindow> sdlWindow_;
+	std::unique_ptr<SDLWindow> sdlWindow_;
+	AppContext appContext_;
+	SystemContext sysContext_;
+	SystemIO io_;
 
 private:
-    void initWindow();
-
-private:
-    AppContext appContext_;
-    SystemContext sysContext_;
-
+	void initWindow();
 };
 
 }	 // namespace ns::editor
