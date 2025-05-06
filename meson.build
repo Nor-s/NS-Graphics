@@ -12,6 +12,9 @@ imgui_dep = cmake.subproject('imgui').dependency('imgui')
 lua_proj = subproject('lua')
 lua_dep = lua_proj.get_variable('lua_dep')
 
+thorvg_proj = subproject('thorvg', default_options:['engines=sw,gl'])
+thorvg_dep = thorvg_proj.get_variable('thorvg_dep')
+
 
 # Set GL
 gl_dep = declare_dependency(link_args: ['-framework', 'OpenGL'])
@@ -38,7 +41,8 @@ nsgraphics_dep =[
     sdl2_dep,
     gl_dep,
     imgui_dep,
-    lua_dep
+    lua_dep,
+    thorvg_dep
 ]
 
 
@@ -49,6 +53,7 @@ nsgraphics_src =[
 'src/editor/imgui/imguiLayer.cpp',
 'src/editor/imgui/imguiWindow.cpp',
 'src/editor/imgui/imguiTextEditor.cpp',
+'src/editor/imgui/imguiScene.cpp',
 ]
 
 nsgraphics_dep = declare_dependency(
@@ -68,3 +73,4 @@ ns_graphics_lib = library('ns_graphics',
 
 subdir('src/example/VoxelShaderToy')
 subdir('src/example/LuaTest')
+subdir('src/example/thorvg')
