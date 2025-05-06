@@ -6,10 +6,10 @@ using namespace ns::editor;
 
 int main()
 {
-	sglib::Logger::SetLogPrefix("NS-Graphics");
+	sglib::Logger::SetLogPrefix("TVG");
 
 	auto* app = new tvgex::TVG;
-	auto appContext = AppContext{.title = "Voxel Shader Toy", .width = 800, .height = 800, .bIsDocMode = false};
+	auto appContext = AppContext{.title = "TVG Examples", .width = 800, .height = 800, .bIsDocMode = false};
 	auto systemContext = SystemContext{
 		.windowEnv = WindowEnv::SDL2,
 		.gpuEnv = GPUEnv::OPENGL,
