@@ -10,7 +10,7 @@ int main()
 	sglib::Logger::SetLogPrefix("NS-Graphics");
 
 	App* app = new VST;
-	auto appContext = AppContext{.title = "Voxel Shader Toy", .width = 800, .height = 600};
+	auto appContext = AppContext{.title = "Voxel Shader Toy", .width = 800, .height = 800, .bIsDocMode=true};
 	auto systemContext = SystemContext{
 		.windowEnv = WindowEnv::SDL2,
 		.gpuEnv = GPUEnv::OPENGL,

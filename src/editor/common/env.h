@@ -17,9 +17,10 @@ enum GPUEnv : uint8_t
 };
 struct AppContext
 {
-    std::string title;
-    uint32_t width;
-    uint32_t height;
+    std::string title = "";
+    uint32_t width = 800;
+    uint32_t height = 800;
+    bool bIsDocMode = true;
 };
 struct SystemContext
 {

@@ -13,12 +13,11 @@ class ImguiWindow : public IImguiModule
 public:
     struct Context
     {
-        bool bIsShow = true;
         std::string title;
+        bool bIsShow = true;
     };
 
 public:
-    ImguiWindow() = default;
     ImguiWindow(const Context& context)
         :context_(context)
     {

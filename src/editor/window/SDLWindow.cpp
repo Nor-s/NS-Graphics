@@ -10,7 +10,7 @@
 namespace ns::editor
 {
 
-SDLWindow::SDLWindow(AppContext appContext, SystemContext sysContext) : appContext_(appContext), sysContext_(sysContext)
+SDLWindow::SDLWindow(const AppContext& appContext, const SystemContext& sysContext) : appContext_(appContext), sysContext_(sysContext)
 {
 	switch (sysContext_.gpuEnv)
 	{
@@ -21,6 +21,7 @@ SDLWindow::SDLWindow(AppContext appContext, SystemContext sysContext) : appConte
 	};
 
 	imguiLayer_ = std::make_unique<ImguiLayer>(static_cast<void*>(this), sysContext_);
+	imguiLayer_->setDocMode(appContext_.bIsDocMode);
 }
 
 SDLWindow::~SDLWindow()

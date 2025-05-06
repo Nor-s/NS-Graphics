@@ -19,7 +19,7 @@ class IImguiModule;
 class SDLWindow
 {
 public:
-    SDLWindow(AppContext appContext, SystemContext sysContext);
+    SDLWindow(const AppContext& appContext, const SystemContext& sysContext);
     ~SDLWindow();
 
     SDL_Window* getHandle(){return handle_;}
