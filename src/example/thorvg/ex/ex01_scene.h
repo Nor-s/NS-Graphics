@@ -39,6 +39,7 @@ public:
 	{
 		if (!canvas)
 			return false;
+		canvas->remove();
 
 		// Create a Scene
 		auto scene = tvg::Scene::gen();

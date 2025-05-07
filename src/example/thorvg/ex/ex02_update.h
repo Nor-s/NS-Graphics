@@ -48,7 +48,7 @@ public:
 		return true;
 	}
 
-	bool update(tvg::Canvas* canvas, double globalTime) override
+	bool update(tvg::Canvas* canvas, double deltaTime) override
 	{
 		if (!canvas)
 			return false;
@@ -56,21 +56,48 @@ public:
 		if (!tvgex::verify(canvas->remove()))
 			return false;
 
-		auto progress = tvgex::pingpong(globalTime, 2000.0, true);	 // play time 2 sec.
-		SG_LOG_LOG("progress: {}", globalTime);
+
+		progress_ = static_cast<float>(tvgex::pingpong(animationTime_, animationDuration_, true));	  // play time 2 sec.
 
 		// Shape
 		auto shape = tvg::Shape::gen();
-		shape->appendRect(-100, -100, 200, 200, (100 * progress), (100 * progress));
+		shape->appendRect(-100, -100, 200, 200, (100 * progress_), (100 * progress_));
 		shape->fill(rand() % 255, rand() % 255, rand() % 255);
-		shape->translate(800 * progress, 800 * progress);
-		shape->scale(1.0f - 0.75f * progress);
-		shape->rotate(360.0f * progress);
+		shape->translate(800 * progress_, 800 * progress_);
+		shape->scale(1.0f - 0.75f * progress_);
+		shape->rotate(360.0f * progress_);
 
 		canvas->push(shape);
+		animationTime_ += static_cast<float>(deltaTime);
+		deltaTime_ = static_cast<float>(deltaTime);
 
 		return true;
 	}
+	virtual void drawUIWidgets() override
+	{
+		bool bIsDec = static_cast<int>(animationTime_/animationDuration_)%2 == 1;
+		bool change = false;
+
+		ImGui::Text("animationTime %f, delta: %f",animationTime_, deltaTime_);
+
+		ImGui::ProgressBar(progress_, ImVec2(0.0f, 0.0f));
+		change |= ImGui::SliderFloat("Duration", &animationDuration_, 1000.0f, 10000.0f);
+		change |= ImGui::SliderFloat("Progress", &progress_, 0.0f, 1.0f);
+
+		if(change)
+		{
+			if(bIsDec)
+				animationTime_ = (1.0-progress_) * animationDuration_ + animationDuration_;
+			else
+				animationTime_ = progress_ * animationDuration_;
+		}
+	}
+
+private:
+	float animationTime_ = 0.0f;
+	float animationDuration_ = 2000.0f;
+	float deltaTime_ = 0.0f;
+	float progress_ = 0.0f;
 };
 
 }	 // namespace tvgex::example

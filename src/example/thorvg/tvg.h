@@ -21,6 +21,8 @@ public:
 		return examples_;
 	}
 	bool setExample(size_t index);
+	void drawExampleUIWidgets(); 
+	void drawExampleUIWindows(); 
 
 protected:
 	virtual void initBegin() override final;

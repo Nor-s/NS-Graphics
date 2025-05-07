@@ -3,6 +3,7 @@
 
 #include <sglib.h>
 #include <thorvg.h>
+#include <imgui.h>
 
 namespace tvgex::example
 {
@@ -12,10 +13,12 @@ class Example
 public:
 	virtual const std::string& toString() = 0;
 	virtual bool content(tvg::Canvas* canvas, uint32_t w, uint32_t h) = 0;
-	virtual bool update(tvg::Canvas* canvas, double globalTime)
+	virtual bool update(tvg::Canvas* canvas, double deltaTime)
 	{
 		return false;
 	}
+	virtual void drawUIWidgets(){}
+	virtual void drawUIWindows(){}
 };
 
 }	 // namespace tvgex::example

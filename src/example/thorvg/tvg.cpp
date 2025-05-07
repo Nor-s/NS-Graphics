@@ -9,6 +9,7 @@
 #include <iostream>
 #include <sglib.h>
 
+#include "ex/ex00_shape.h"
 #include "ex/ex01_scene.h"
 #include "ex/ex02_update.h"
 #include "imguiTvgWindow.h"
@@ -52,6 +53,7 @@ void TVG::initEnd()
 	glCanvas->target(sdlWindow_->getGLContext(), 0, appContext_.width, appContext_.height, ColorSpace::ABGR8888S);
 	canvas_ = glCanvas;
 
+	examples_.emplace_back(std::make_unique<example::EX00_Shape>());
 	examples_.emplace_back(std::make_unique<example::EX01_Scene>());
 	examples_.emplace_back(std::make_unique<example::EX02_Update>());
 
@@ -66,7 +68,11 @@ void TVG::addImguiModule()
 
 void TVG::predraw()
 {
-	examples_[currentExample_]->update(canvas_, io_.globalTime);
+	
+}
+void TVG::draw()
+{
+	examples_[currentExample_]->update(canvas_, io_.deltaTime);
 
 	// todo: add needDraw Logic
 	if (verify(canvas_->draw(true), "TVG Draw Error"))
@@ -74,9 +80,6 @@ void TVG::predraw()
 		verify(canvas_->sync(), "TVG Sync Error");
 		return;
 	}
-}
-void TVG::draw()
-{
 }
 
 void TVG::postdraw()
@@ -99,6 +102,16 @@ bool TVG::setExample(size_t index)
 		return false;
 	}
 	SG_LOG_INFO("ok SET_EXAMPLE");
+}
+
+void TVG::drawExampleUIWidgets()
+{
+	examples_[currentExample_]->drawUIWidgets();
+}
+
+void TVG::drawExampleUIWindows()
+{
+	examples_[currentExample_]->drawUIWindows();
 }
 
 }	 // namespace tvgex

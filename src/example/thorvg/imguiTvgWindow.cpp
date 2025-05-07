@@ -29,8 +29,11 @@ void ImguiTVGWindow::draw()
 				app_->setExample(itemCurrent);
 			}
 		}
-		ImGui::End();
+		ImGui::Separator();
+		app_->drawExampleUIWidgets();
 	}
+	ImGui::End();
+	app_->drawExampleUIWindows();
 }
 
 }	 // namespace tvgex
