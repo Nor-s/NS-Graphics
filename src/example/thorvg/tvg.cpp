@@ -93,8 +93,7 @@ bool TVG::setExample(size_t index)
 	auto height = appContext_.height;
 
 	// init && initiate the first rendering
-	if (!examples_[currentExample_]->content(canvas_, width, height) ||
-		!verify(canvas_->draw(), "setExample Draw Error") || !verify(canvas_->sync(), "setExample Sync Error"))
+	if (!examples_[currentExample_]->content(canvas_, width, height))
 	{
 		SG_LOG_ERROR("SET_EXAMPLE");
 		return false;
