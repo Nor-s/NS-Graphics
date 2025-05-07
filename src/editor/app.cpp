@@ -32,8 +32,8 @@ void App::run()
 		sdlWindow_->draw(context);
 		draw();
 
-		sdlWindow_->postdraw(context);
 		postdraw();
+		sdlWindow_->postdraw(context);
 
 		context.deltaTime = timer.elapsed();
 		context.globalTime = timer.duration();
