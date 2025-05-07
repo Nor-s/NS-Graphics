@@ -32,8 +32,8 @@ public:
 	}
 	double duration(const TimePoint& start, const TimePoint& end)
 	{
-		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-		return static_cast<double>(elapsed.count());
+		auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+		return elapsed.count()/1000.0;
 	}
 	double elapsed()
 	{
