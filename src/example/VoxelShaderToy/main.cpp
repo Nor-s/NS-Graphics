@@ -1,5 +1,5 @@
 #include <iostream>
-#include <sglib.h>
+#include <nengine.h>
 #include "VST.h"
 
 using namespace ns::editor;
@@ -7,7 +7,7 @@ using namespace vst;
 
 int main()
 {
-	sglib::Logger::SetLogPrefix("NS-Graphics");
+	ns::Logger::SetLogPrefix("NS-Graphics");
 
 	App* app = new VST;
 	auto appContext = AppContext{.title = "Voxel Shader Toy", .width = 800, .height = 800, .bIsDocMode=true};

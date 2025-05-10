@@ -1,12 +1,12 @@
 #include <iostream>
-#include <sglib.h>
+#include <nengine.h>
 #include "tvg.h"
 
 using namespace ns::editor;
 
 int main()
 {
-	sglib::Logger::SetLogPrefix("TVG");
+	ns::Logger::SetLogPrefix("TVG");
 
 	auto* app = new tvgex::TVG;
 	auto appContext = AppContext{.title = "TVG Examples", .width = 800, .height = 800, .bIsDocMode = false};

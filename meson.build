@@ -4,8 +4,6 @@ project('NS-Graphics', 'cpp',
 
 # For Dependency
 cmake = import('cmake')
-sglib_cmake = cmake.subproject('sglib')
-sglib_dep = sglib_cmake.dependency('sglib').as_link_whole()
 spdlog_dep = dependency('spdlog', required: true)
 sdl2_dep = dependency('sdl2')
 imgui_dep = cmake.subproject('imgui').dependency('imgui')
@@ -36,7 +34,6 @@ if not gl_dep.found()
 endif
 
 nsgraphics_dep =[
-    sglib_dep,
     spdlog_dep,
     sdl2_dep,
     gl_dep,
@@ -48,6 +45,8 @@ nsgraphics_dep =[
 
 # Src Files
 nsgraphics_src =[
+'src/core/common/logger.cpp',
+
 'src/editor/app.cpp',
 'src/editor/window/SDLWindow.cpp',
 'src/editor/imgui/imguiLayer.cpp',

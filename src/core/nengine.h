@@ -3,6 +3,6 @@
 
 #include "platform/platformEvent.h"
 #include "common/nsTime.h"
-
+#include "common/logger.h"
 
 #endif

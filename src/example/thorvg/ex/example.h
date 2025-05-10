@@ -1,9 +1,9 @@
 #ifndef _TVGEX_EXAMPLE_H_
 #define _TVGEX_EXAMPLE_H_
 
-#include <sglib.h>
 #include <thorvg.h>
 #include <imgui.h>
+#include <nengine.h>
 
 namespace tvgex::example
 {
@@ -32,32 +32,32 @@ inline bool verify(tvg::Result result, std::string failMsg = "")
 	{
 		case tvg::Result::FailedAllocation:
 		{
-			SG_LOG_ERROR("FailedAllocation! {}", failMsg);
+			NS_ERROR("FailedAllocation! {}", failMsg);
 			return false;
 		}
 		case tvg::Result::InsufficientCondition:
 		{
-			SG_LOG_ERROR("InsufficientCondition! {}", failMsg);
+			NS_ERROR("InsufficientCondition! {}", failMsg);
 			return false;
 		}
 		case tvg::Result::InvalidArguments:
 		{
-			SG_LOG_ERROR("InvalidArguments! {}", failMsg);
+			NS_ERROR("InvalidArguments! {}", failMsg);
 			return false;
 		}
 		case tvg::Result::MemoryCorruption:
 		{
-			SG_LOG_ERROR("MemoryCorruption! {}", failMsg);
+			NS_ERROR("MemoryCorruption! {}", failMsg);
 			return false;
 		}
 		case tvg::Result::NonSupport:
 		{
-			SG_LOG_ERROR("NonSupport! {}", failMsg);
+			NS_ERROR("NonSupport! {}", failMsg);
 			return false;
 		}
 		case tvg::Result::Unknown:
 		{
-			SG_LOG_ERROR("Unknown! {}", failMsg);
+			NS_ERROR("Unknown! {}", failMsg);
 			return false;
 		}
 		default:

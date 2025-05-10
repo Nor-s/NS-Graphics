@@ -7,7 +7,6 @@
 
 #include <string>
 #include <iostream>
-#include <sglib.h>
 
 #include "ex/ex00_shape.h"
 #include "ex/ex01_scene.h"
@@ -33,21 +32,21 @@ TVG::~TVG()
 
 void TVG::initBegin()
 {
-	SG_LOG_LOG("INIT_BEGIN");
+	NS_LOG("INIT_BEGIN");
 
 	int threadCount = 1;
 	if (!verify(Initializer::init(threadCount), "Failed to init ThorVG engine"))
 	{
-		SG_LOG_ERROR("INIT_BEGIN");
+		NS_ERROR("INIT_BEGIN");
 		return;
 	}
 
-	SG_LOG_INFO("ok INIT_BEGIN");
+	NS_INFO("ok INIT_BEGIN");
 }
 
 void TVG::initEnd()
 {
-	SG_LOG_LOG("INIT_END");
+	NS_LOG("INIT_END");
 
 	auto* glCanvas = GlCanvas::gen();
 	glCanvas->target(sdlWindow_->getGLContext(), 0, appContext_.width, appContext_.height, ColorSpace::ABGR8888S);
@@ -58,7 +57,7 @@ void TVG::initEnd()
 	examples_.emplace_back(std::make_unique<example::EX02_Update>());
 
 	setExample(0);
-	SG_LOG_INFO("ok INIT_END");
+	NS_INFO("ok INIT_END");
 }
 
 void TVG::addImguiModule()
@@ -88,7 +87,7 @@ void TVG::postdraw()
 
 bool TVG::setExample(size_t index)
 {
-	SG_LOG_LOG("SET_EXAMPLE");
+	NS_LOG("SET_EXAMPLE");
 	currentExample_ = index;
 
 	// todo: resize width, height;
@@ -98,10 +97,10 @@ bool TVG::setExample(size_t index)
 	// init && initiate the first rendering
 	if (!examples_[currentExample_]->content(canvas_, width, height))
 	{
-		SG_LOG_ERROR("SET_EXAMPLE");
+		NS_ERROR("SET_EXAMPLE");
 		return false;
 	}
-	SG_LOG_INFO("ok SET_EXAMPLE");
+	NS_INFO("ok SET_EXAMPLE");
 }
 
 void TVG::drawExampleUIWidgets()

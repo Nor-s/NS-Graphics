@@ -1,7 +1,6 @@
 #include "SDLWindow.h"
 
 #include <nengine.h>
-#include <sglib.h>
 #include <SDL_opengl.h>
 #include <imgui_impl_sdl2.h>
 
@@ -38,7 +37,7 @@ void SDLWindow::initGL()
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
 	{
 		auto error = SDL_GetError();
-		SG_LOG_CRITICAL("SDL INIT ERROR {}", error);
+		NS_CRITICAL("SDL INIT ERROR {}", error);
 	}
 
 	// Set GL
@@ -59,7 +58,7 @@ void SDLWindow::initGL()
 							   appContext_.width, appContext_.height, windowFlags);
 	if (handle_ == nullptr)
 	{
-		SG_LOG_CRITICAL("WINDOW INIT ERROR {}", SDL_GetError());
+		NS_CRITICAL("WINDOW INIT ERROR {}", SDL_GetError());
 	}
 
 	// Set GL Context

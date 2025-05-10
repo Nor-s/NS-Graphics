@@ -2,7 +2,6 @@
 #define _NS_CORE_COMMON_TIME_H_
 
 #include <chrono>
-#include <sglib.h>
 
 namespace ns
 {
@@ -19,7 +18,6 @@ public:
 	~Timer()
 	{
 		double ms = duration();
-		SG_LOG_INFO("duration: {}ms", ms);
 	}
 	double duration()
 	{
