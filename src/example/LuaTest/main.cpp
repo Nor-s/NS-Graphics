@@ -26,11 +26,11 @@ int main()
 	// Add standard libraries to Lua Virtual Machine
 	luaL_openlibs(L);
 
-    std::string luaString="a = 1";
+    std::string luaString="return 213";
 
     if(CheckLua(L, luaL_dostring(L, luaString.c_str())))
     {
-        lua_getglobal(L,"a");
+        // lua_getglobal(L,"a");
         if(lua_isnumber(L,-1))
         {
             std::cout<< (int)lua_tointeger(L, -1) << std::endl;

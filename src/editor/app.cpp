@@ -29,8 +29,8 @@ void App::run()
 		sdlWindow_->predraw(context);
 		predraw();
 
-		sdlWindow_->draw(context);
 		draw();
+		sdlWindow_->draw(context);
 
 		postdraw();
 		sdlWindow_->postdraw(context);

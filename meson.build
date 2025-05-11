@@ -47,6 +47,11 @@ nsgraphics_dep =[
 nsgraphics_src =[
 'src/core/common/logger.cpp',
 
+'src/core/gpu/gl/glRenderTarget.cpp',
+'src/core/gpu/gl/glShader.cpp',
+'src/core/gpu/gl/glGeometry.cpp',
+'src/core/gpu/gl/glBuffer.cpp',
+
 'src/editor/app.cpp',
 'src/editor/window/SDLWindow.cpp',
 'src/editor/imgui/imguiLayer.cpp',
@@ -61,8 +66,6 @@ nsgraphics_dep = declare_dependency(
    sources             : nsgraphics_src
 )
 
-
-
 # Define Exe
 ns_graphics_lib = library('ns_graphics', 
     nsgraphics_src,
@@ -73,3 +76,4 @@ ns_graphics_lib = library('ns_graphics',
 subdir('src/example/VoxelShaderToy')
 subdir('src/example/LuaTest')
 subdir('src/example/thorvg')
+subdir('src/example/LearnOpengl')
