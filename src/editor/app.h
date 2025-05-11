@@ -28,6 +28,7 @@ public:
 	virtual void run();
 
 protected:
+	virtual void preProcessEvent(){};
 	virtual void initBegin() {};
 	virtual void initEnd() {};
 	virtual void addImguiModule()

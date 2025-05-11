@@ -20,10 +20,13 @@ App::~App()
 
 void App::run()
 {
+	addImguiModule();
+
 	Timer timer;
 	SystemIO& context = io_;
 	while (!context.done)
 	{
+		preProcessEvent();
 		sdlWindow_->processEvent(context);
 
 		sdlWindow_->predraw(context);
@@ -46,7 +49,6 @@ void App::initWindow()
 	{
 		sdlWindow_ = std::make_unique<SDLWindow>(appContext_, sysContext_);
 	}
-	addImguiModule();
 }
 
 }	 // namespace ns::editor
