@@ -19,30 +19,35 @@ class IImguiModule;
 class SDLWindow
 {
 public:
-    SDLWindow(const AppContext& appContext, const SystemContext& sysContext);
-    ~SDLWindow();
+	SDLWindow(const AppContext& appContext, const SystemContext& sysContext);
+	~SDLWindow();
 
-    SDL_Window* getHandle(){return handle_;}
-    SDL_GLContext& getGLContext(){return context_;}
-    void processEvent(SystemIO& io);
-    void predraw(SystemIO& io);
-    void draw(SystemIO& io);
-    void postdraw(SystemIO& io);
+	SDL_Window* getHandle()
+	{
+		return handle_;
+	}
+	SDL_GLContext& getGLContext()
+	{
+		return context_;
+	}
+	void processEvent(SystemIO& io);
+	void predraw(SystemIO& io);
+	void draw(SystemIO& io);
+	void postdraw(SystemIO& io);
 
-    void addImguiModule(std::unique_ptr<IImguiModule> imguiModule);
+	void addImguiModule(std::unique_ptr<IImguiModule> imguiModule);
 
 private:
-    void initGL();
+	void initGL();
 
 private:
-    AppContext appContext_;
-    SystemContext sysContext_;
-    SDL_Window* handle_ = nullptr;
-    SDL_GLContext context_;
+	AppContext appContext_;
+	SystemContext sysContext_;
+	SDL_Window* handle_ = nullptr;
+	SDL_GLContext context_;
 
-    std::unique_ptr<ImguiLayer> imguiLayer_;
+	std::unique_ptr<ImguiLayer> imguiLayer_;
 };
-
 
 }	 // namespace ns::editor
 #endif

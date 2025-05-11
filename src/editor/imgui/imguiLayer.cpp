@@ -34,24 +34,22 @@ void ImguiLayer::predraw()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
-
 }
 void ImguiLayer::draw()
 {
-	if(bIsDocMode_) 
+	if (bIsDocMode_)
 	{
 		drawDoc();
 	}
 
-	for(auto& module: modules_)
+	for (auto& module : modules_)
 	{
 		module->draw();
 	}
-
 }
 void ImguiLayer::postdraw()
 {
-    ImGui::Render();
+	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	// Update and Render additional Platform Windows
@@ -81,7 +79,7 @@ void ImguiLayer::drawDoc()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 	windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-					ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+				   ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 

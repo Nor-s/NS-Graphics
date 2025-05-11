@@ -11,25 +11,23 @@ namespace ns::editor
 class ImguiWindow : public IImguiModule
 {
 public:
-    struct Context
-    {
-        std::string title;
-        bool bIsShow = true;
-    };
+	struct Context
+	{
+		std::string title;
+		bool bIsShow = true;
+	};
 
 public:
-    ImguiWindow(const Context& context)
-        :context_(context)
-    {
-    }
-    ~ImguiWindow() = default;
+	ImguiWindow(const Context& context) : context_(context)
+	{
+	}
+	~ImguiWindow() = default;
 	virtual void draw() override;
 
 private:
-    Context context_;
-
+	Context context_;
 };
 
-}	 // namespace ns::eidtor
+}	 // namespace ns::editor
 
 #endif

@@ -9,7 +9,8 @@
 namespace ns::editor
 {
 
-SDLWindow::SDLWindow(const AppContext& appContext, const SystemContext& sysContext) : appContext_(appContext), sysContext_(sysContext)
+SDLWindow::SDLWindow(const AppContext& appContext, const SystemContext& sysContext)
+	: appContext_(appContext), sysContext_(sysContext)
 {
 	switch (sysContext_.gpuEnv)
 	{
@@ -96,7 +97,7 @@ void SDLWindow::processEvent(SystemIO& io)
 void SDLWindow::predraw(SystemIO& io)
 {
 	static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    glViewport(0, 0, (int) appContext_.width, (int) appContext_.height);
+	glViewport(0, 0, (int) appContext_.width, (int) appContext_.height);
 	glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w,
 				 clear_color.w);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -117,4 +118,3 @@ void SDLWindow::addImguiModule(std::unique_ptr<IImguiModule> module)
 }
 
 }	 // namespace ns::editor
-

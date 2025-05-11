@@ -7,8 +7,8 @@ namespace ns::editor
 class IImguiModule
 {
 public:
-    virtual ~IImguiModule() = default;
-    virtual void draw() = 0;
+	virtual ~IImguiModule() = default;
+	virtual void draw() = 0;
 };
 
 }	 // namespace ns::editor
