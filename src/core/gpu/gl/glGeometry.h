@@ -9,6 +9,11 @@ namespace ns
 class GlGeometry
 {
 public:
+    static std::unique_ptr<GlGeometry> genTriangle();
+    static std::unique_ptr<GlGeometry> genRectangle();
+    static std::unique_ptr<GlGeometry> genCube();
+
+public:
     GlGeometry() = default;
     ~GlGeometry() = default;
     const GlMeshBuffer* getBuffer();
