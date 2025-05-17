@@ -58,6 +58,7 @@ nsgraphics_src =[
 'src/editor/imgui/imguiWindow.cpp',
 'src/editor/imgui/imguiTextEditor.cpp',
 'src/editor/imgui/imguiSceneWindow.cpp',
+'src/editor/imgui/imguiComponents.cpp',
 ]
 
 nsgraphics_dep = declare_dependency(
