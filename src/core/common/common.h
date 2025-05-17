@@ -5,8 +5,7 @@
 #include <memory>
 #include <numeric>
 
-#include "nsVector.h"
-#include "nsMat.h"
+#include "nsTransform.h"
 #include "./logger.h"
 
 namespace ns

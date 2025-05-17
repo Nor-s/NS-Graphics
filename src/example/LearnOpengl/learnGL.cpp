@@ -6,6 +6,7 @@
 #include <editor/imgui/imguiTextEditor.h>
 
 #include "ex/ex00_shape.h"
+#include "ex/ex01_transform.h"
 #include "imguiExampleWindow.h"
 
 using namespace ns::editor;
@@ -18,6 +19,7 @@ void LearnGL::addImguiModule()
 void LearnGL::initEnd()
 {
 	examples_.emplace_back(std::make_unique<Ex00_Shape>());
+	examples_.emplace_back(std::make_unique<Ex01_Transform>());
 	setExample(0);
 }
 void LearnGL::draw()

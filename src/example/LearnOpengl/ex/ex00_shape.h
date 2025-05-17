@@ -29,32 +29,45 @@ public:
 		frag_ = R"(
         #version 330 core
         out vec4 FragColor;
+		uniform vec4 color;
 
         void main()
         {
-            FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+            FragColor = color;
         } 
         )";
 		shader_.init(vert_, frag_);
 
 		// vertex info
 		geoInfo_.vertex = {
-			0.5f,  0.5f,  0.0f,	   // top right
-			0.5f,  -0.5f, 0.0f,	   // bottom right
-			-0.5f, 0.5f,  0.0f,	   // top left
+			.0f,  -0.5f,  0.0f,	   
+			1.0f,  -1.0f, 0.0f,	   
+			-1.0f, -1.0f,  0.0f,	  
 		};
-		geoInfo_.index = {0, 1, 2, 0};
+		geoInfo_.index = {0, 1, 2};
 		// x,y,z
 		uint32_t stride = 3 * sizeof(float);
 		geometry_.init(geoInfo_, {ns::GlVertexLayout{0, 3, stride, 0}});
+
+		rectangle_ = ns::GlGeometry::genRectangle();
 	}
 	bool update(double deltaTime)
 	{
 		shader_.use();
+
+		rectangle_->getBuffer()->bind();
+		shader_.setVec4("color", ns::Vec4{0.0f,  4.0f, 1.0f, 1.0f});
+		glDrawElements(GL_TRIANGLES, rectangle_->getIndexSize(), GL_UNSIGNED_INT, 0);
+		rectangle_->getBuffer()->unbind();
+
 		geometry_.getBuffer()->bind();
+		shader_.setVec4("color", ns::Vec4{1.0f,  4.0f, 0.0f, 1.0f});
 		glDrawElements(GL_TRIANGLES, geometry_.getIndexSize(), GL_UNSIGNED_INT, 0);
 		geometry_.getBuffer()->unbind();
 		return true;
+	}
+	void drawUIWidgets()
+	{
 	}
 
 private:
@@ -63,8 +76,7 @@ private:
 	ns::GlShader shader_;
 	ns::GlGeometry geometry_;
 	ns::GeometryInfo geoInfo_;
-
-	unsigned int VBO, VAO;
+	std::unique_ptr<ns::GlGeometry> rectangle_ = nullptr;
 };
 
 #endif
