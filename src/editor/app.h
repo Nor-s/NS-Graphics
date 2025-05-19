@@ -13,6 +13,13 @@ class SDLWindow;
 
 class App
 {
+	static App* g_app;
+public:
+	static const AppContext& GetAppContext()
+	{
+		return g_app->appContext_;
+	}
+
 public:
 	App();
 	virtual ~App();
@@ -26,6 +33,7 @@ public:
 		initEnd();
 	}
 	virtual void run();
+
 
 protected:
 	virtual void preProcessEvent() {};

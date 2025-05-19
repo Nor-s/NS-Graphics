@@ -54,10 +54,10 @@ public:
 			cube_->getBuffer()->bind();
 			shader_.setVec4("color", ns::Vec4{0.0f, 4.0f, 1.0f, 1.0f});
 			{
-				// T * S * R
+				// T * R * S
 				auto transform = ns::translate({}, translate_);
-				transform = ns::scale(transform, scale_);
 				transform = ns::rotateZ(transform, angle_ * 3.141592 / 180.0);
+				transform = ns::scale(transform, scale_);
 				shader_.setMat4("transform", transform);
 			}
 			glDrawElements(GL_TRIANGLES, cube_->getIndexSize(), GL_UNSIGNED_INT, 0);

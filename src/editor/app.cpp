@@ -9,9 +9,11 @@
 
 namespace ns::editor
 {
+App* App::g_app = nullptr;
 
 App::App()
 {
+	g_app = this;
 }
 
 App::~App()
