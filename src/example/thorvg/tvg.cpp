@@ -49,7 +49,7 @@ void TVG::initEnd()
 	NS_LOG("INIT_END");
 
 	auto* glCanvas = GlCanvas::gen();
-	glCanvas->target(sdlWindow_->getGLContext(), 0, appContext_.width, appContext_.height, ColorSpace::ABGR8888S);
+	glCanvas->target(sdlWindow_->getGLContext(), 0, appContext_.res.width, appContext_.res.height, ColorSpace::ABGR8888S);
 	canvas_ = glCanvas;
 
 	examples_.emplace_back(std::make_unique<example::EX00_Shape>());
@@ -91,8 +91,8 @@ bool TVG::setExample(size_t index)
 	currentExample_ = index;
 
 	// todo: resize width, height;
-	auto width = appContext_.width;
-	auto height = appContext_.height;
+	auto width = appContext_.res.width;
+	auto height = appContext_.res.height;
 
 	// init && initiate the first rendering
 	if (!examples_[currentExample_]->content(canvas_, width, height))

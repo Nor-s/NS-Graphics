@@ -17,7 +17,6 @@ public:
 	}
 	~Timer()
 	{
-		double ms = duration();
 	}
 	double duration()
 	{

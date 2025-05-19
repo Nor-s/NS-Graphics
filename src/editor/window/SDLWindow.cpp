@@ -56,7 +56,7 @@ void SDLWindow::initGL()
 	SDL_WindowFlags windowFlags =
 		(SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 	handle_ = SDL_CreateWindow(appContext_.title.data(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-							   appContext_.width, appContext_.height, windowFlags);
+							   appContext_.res.width, appContext_.res.height, windowFlags);
 	if (handle_ == nullptr)
 	{
 		NS_CRITICAL("WINDOW INIT ERROR {}", SDL_GetError());
@@ -97,10 +97,12 @@ void SDLWindow::processEvent(SystemIO& io)
 void SDLWindow::predraw(SystemIO& io)
 {
 	static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-	glViewport(0, 0, (int) appContext_.width, (int) appContext_.height);
+	glEnable(GL_DEPTH_TEST);  
+
+	glViewport(0, 0, (int) appContext_.res.width, (int) appContext_.res.height);
 	glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w,
 				 clear_color.w);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	imguiLayer_->predraw();
 }

@@ -3,6 +3,7 @@
 
 #include <type_traits>
 #include <string>
+#include "common/common.h"
 
 namespace ns::editor
 {
@@ -18,8 +19,7 @@ enum GPUEnv : uint8_t
 struct AppContext
 {
 	std::string title = "";
-	uint32_t width = 800;
-	uint32_t height = 800;
+	ns::Resolution res{800, 800};
 	bool bIsDocMode = true;
 };
 struct SystemContext

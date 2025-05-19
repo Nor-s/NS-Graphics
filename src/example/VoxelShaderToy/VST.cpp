@@ -51,7 +51,7 @@ void VST::preProcessEvent()
 void VST::initEnd()
 {
 	g_vst = this;
-	initScene(ns::Resolution{.width=appContext_.width, .height= appContext_.height});
+	initScene(appContext_.res);
 }
 
 void VST::draw()
@@ -61,7 +61,6 @@ void VST::draw()
 	GLCHECK(glViewport(rect.x, rect.y, rect.w, rect.h));
 	GLCHECK(glClearColor(1.0f, 1.0, 0, 1.0f));
 	GLCHECK(glClear(GL_COLOR_BUFFER_BIT));
-
 	GLCHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }
 
