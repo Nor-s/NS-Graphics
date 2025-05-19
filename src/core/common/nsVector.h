@@ -1,6 +1,9 @@
 #ifndef _NS_GRAPHICS_CORE_COMMON_VECTOR3_H_
 #define _NS_GRAPHICS_CORE_COMMON_VECTOR3_H_
 
+#include <cmath>
+#include <cstring>
+
 namespace ns
 {
 template <typename T>
@@ -81,14 +84,6 @@ struct Vector4
 		};
 		T value[4]={0,};
 	};
-	T& operator[](size_t col)
-	{
-		return value[col];
-	}
-	const T& operator[](size_t col) const
-	{
-		return value[col];
-	}
 	Vector4()
 	{
 		memset(value, 0, sizeof value);
@@ -99,6 +94,18 @@ struct Vector4
 		value[1] = y;
 		value[2] = z;
 		value[3] = a;
+	}
+	T& operator[](size_t col)
+	{
+		return value[col];
+	}
+	const T& operator[](size_t col) const
+	{
+		return value[col];
+	}
+	operator Vector3<T>()
+	{
+		return Vector3<T>{x, y, z};
 	}
 };
 
@@ -169,21 +176,33 @@ Vector4<T> operator/(const Vector4<T>& a, T b)
 }
 
 template <typename T>
-auto length2(const T& a) -> decltype(a * a)
+float length2(const T& a) 
 {
 	return a * a;
 }
 
 template <typename T>
-auto length(const T& a) -> decltype(sqrt(a * a))
+float length(const T& a)
 {
-	return sqrt(length2(a));
+	return std::sqrt(length2(a));
 }
 
 template <typename T>
 const T normalize(const T& a)
 {
 	return a / length(a);
+}
+
+template <typename T>
+const Vector3<T> cross(const Vector3<T>& a, const Vector3<T>& b)
+{
+	Vector3<T> ret;
+
+	ret.x = a.y*b.z - a.z*b.y;
+	ret.y = a.z*b.x - a.x*b.z;
+	ret.z = a.x*b.y - a.y*b.x;
+
+	return ret;
 }
 
 }	 // namespace ns

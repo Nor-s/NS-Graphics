@@ -46,6 +46,7 @@ nsgraphics_dep =[
 # Src Files
 nsgraphics_src =[
 'src/core/common/logger.cpp',
+'src/core/common/nsTransform.cpp',
 
 'src/core/gpu/gl/glRenderTarget.cpp',
 'src/core/gpu/gl/glShader.cpp',
