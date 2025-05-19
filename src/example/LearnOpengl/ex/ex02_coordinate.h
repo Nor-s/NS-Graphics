@@ -58,9 +58,11 @@ public:
 
 		using namespace ns::editor;
 
-		cube_.cube = ns::GlGeometry::genRectangle();
-		camera_.setRes(App::GetAppContext().res);
-		camera_.setPosition({0, 0, -1});
+		auto res = App::GetAppContext().res;
+		cube_.cube = ns::GlGeometry::genCube();
+		camera_.setRes(res);
+		camera_.setOrthoFactor({(float)res.width, (float)res.height});
+		camera_.setPosition({0, 0, 5});
 		camera_.setTarget({0.0, 0.0, 0.0});
 	}
 
@@ -74,6 +76,7 @@ public:
 			shader_.setMat4("transform", cube_.transform.get());
 			shader_.setMat4("view", camera_.getView());
 			shader_.setMat4("proj", camera_.getProj());
+				
 			glDrawElements(GL_TRIANGLES, cube_.cube->getIndexSize(), GL_UNSIGNED_INT, 0);
 			cube_.cube->getBuffer()->unbind();
 		}
@@ -89,8 +92,8 @@ public:
 		cube_.transform.radianXYZ.z = angle_*3.141592f/180.0f ;
 
 		// camera
-		ImGuiEx::DragPropertyXYZ("camera pos", camera_.getMutableTransform().position.value, 0.1f, -4.0f, 4.0f);
-		ImGuiEx::DragPropertyXYZ("target pos", camera_.getMutableTarget().value, 0.1f, -4.0f, 4.0f);
+		ImGuiEx::DragPropertyXYZ("camera pos", camera_.getMutableTransform().position.value, 0.1f, -10.0f, 10.0f);
+		ImGuiEx::DragPropertyXYZ("target pos", camera_.getMutableTarget().value, 0.1f, -10.0f, 10.0f);
 
 		using namespace ns::editor;
 		auto windowRes = App::GetAppContext().res;

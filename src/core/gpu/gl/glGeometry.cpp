@@ -39,12 +39,30 @@ std::unique_ptr<GlGeometry> GlGeometry::genCube()
     std::unique_ptr<GlGeometry> ret = std::make_unique<GlGeometry>(); 
     GeometryInfo geoInfo;
     geoInfo.vertex = {
-        0.5f, 0.5f,  0.0f,	   
-        0.5f,  -0.5f, 0.0f,	 
-        -0.5f, -0.5f,  0.0f,	
-        -0.5f, 0.5f,  0.0f,	
+        // x, y, z
+         -0.5f,  0.5f,  0.5f,
+         -0.5f,  -0.5f,  0.5f,
+         0.5f,  -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+
+        -0.5f,  0.5f,  -0.5f,   // 0 --- 4
+        -0.5f,  -0.5f,  -0.5f,  // 1 --- 5
+         0.5f,  -0.5f,  -0.5f,  // 2 --- 6
+         0.5f,  0.5f,  -0.5f,   // 3 --- 7
     };
-    geoInfo.index = {0, 1, 3, 1, 2, 3};
+    geoInfo.index = {0, 1, 2, 
+                     0, 2, 3, // front 
+                     0, 5, 1,
+                     0, 4, 5, // left 
+                     4, 5, 6, 
+                     4, 6, 7, // back
+                     3, 2, 6,
+                     3, 6, 7, // right
+                     0, 3, 4,
+                     3, 7, 4, // top
+                     1, 5, 2,
+                     5, 6, 2 // bottom
+                    };
     uint32_t stride = 3 * sizeof(float);
     ret->init(geoInfo, {ns::GlVertexLayout{0, 3, stride, 0}});
 

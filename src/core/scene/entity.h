@@ -2,8 +2,6 @@
 #define _NS_GRAPHICS_CORE_SCENE_ENTITY_H_
 
 #include "../common/common.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 namespace ns
 {
