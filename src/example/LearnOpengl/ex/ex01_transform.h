@@ -1,14 +1,7 @@
 #ifndef _LEARN_GL_EX_01_TRANSFORM_H_
 #define _LEARN_GL_EX_01_TRANSFORM_H_
 
-#include <cmath>
 #include "example.h"
-#include <core/gpu/gl/glGeometry.h>
-#include <core/gpu/gl/glShader.h>
-#include <core/gpu/gl/glBuffer.h>
-#include <common/common.h>
-
-#include <editor/imgui/imguiComponents.h>
 
 class Ex01_Transform : public Example
 {

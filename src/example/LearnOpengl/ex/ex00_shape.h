@@ -2,10 +2,6 @@
 #define _LEARN_GL_EX_SHAPE_H_
 
 #include "example.h"
-#include <core/gpu/gl/glGeometry.h>
-#include <core/gpu/gl/glShader.h>
-#include <core/gpu/gl/glBuffer.h>
-#include <common/common.h>
 
 class Ex00_Shape : public Example
 {

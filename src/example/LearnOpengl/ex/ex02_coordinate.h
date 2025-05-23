@@ -1,23 +1,8 @@
 #ifndef _LEARN_GL_EX_02_COORDINATE_H_
 #define _LEARN_GL_EX_02_COORDINATE_H_
 
-#include <cmath>
 #include "example.h"
 
-#include <core/gpu/gl/glGeometry.h>
-#include <core/gpu/gl/glShader.h>
-#include <core/gpu/gl/glBuffer.h>
-#include <editor/app.h>
-
-#include <common/common.h>
-
-#include <editor/imgui/imguiComponents.h>
-
-struct ExEntity
-{
-	std::unique_ptr<ns::GlGeometry> cube = nullptr;
-	ns::Transform transform;
-};
 
 class Ex02_Coordinate : public Example
 {
