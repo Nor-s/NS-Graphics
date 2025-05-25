@@ -12,6 +12,7 @@ public:
     static std::unique_ptr<GlGeometry> genTriangle();
     static std::unique_ptr<GlGeometry> genRectangle();
     static std::unique_ptr<GlGeometry> genCube();
+    static std::unique_ptr<GlGeometry> genCubeWithNormal();
 
 public:
     GlGeometry() = default;

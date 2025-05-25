@@ -34,13 +34,14 @@ std::unique_ptr<GlGeometry> GlGeometry::genRectangle()
 
     return ret;
 }
+
 std::unique_ptr<GlGeometry> GlGeometry::genCube()
 {
     std::unique_ptr<GlGeometry> ret = std::make_unique<GlGeometry>(); 
     GeometryInfo geoInfo;
     geoInfo.vertex = {
         // x, y, z
-         -0.5f,  0.5f,  0.5f,
+         -0.5f,  0.5f,  0.5f, 
          -0.5f,  -0.5f,  0.5f,
          0.5f,  -0.5f,  0.5f,
          0.5f,  0.5f,  0.5f,
@@ -65,6 +66,62 @@ std::unique_ptr<GlGeometry> GlGeometry::genCube()
                     };
     uint32_t stride = 3 * sizeof(float);
     ret->init(geoInfo, {ns::GlVertexLayout{0, 3, stride, 0}});
+
+    return ret;
+}
+
+std::unique_ptr<GlGeometry> GlGeometry::genCubeWithNormal()
+{
+    std::unique_ptr<GlGeometry> ret = std::make_unique<GlGeometry>(); 
+    GeometryInfo geoInfo;
+    geoInfo.vertex = {
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+       -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+       -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+   
+       -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+       -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+       -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+   
+       -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+       -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+       -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+       -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+       -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+       -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+   
+        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+   
+       -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+       -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+       -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+   
+       -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+        0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+       -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+       -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+    };
+    uint32_t stride = 6 * sizeof(float);
+    ret->init(geoInfo, {
+        ns::GlVertexLayout{0, 3, stride, 0},
+        ns::GlVertexLayout{1, 3, stride, 3*sizeof(float)},
+    });
 
     return ret;
 }
