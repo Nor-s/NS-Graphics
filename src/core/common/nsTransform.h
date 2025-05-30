@@ -187,6 +187,8 @@ T2 convert4x4(T1 other)
 }
 
 Mat4 orthoRH(float left, float right, float bottom, float top, float near, float far);
+Mat4 perspectiveRH(float left, float right, float bottom, float top, float near, float far);
+Mat4 perspectiveRH(float verticalFov, float aspect, float near, float far);
 
 struct Transform
 {

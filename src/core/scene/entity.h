@@ -28,17 +28,19 @@ protected:
 
 class CameraEntity : public Entity
 {
+public:
 	enum class Mode
 	{
-		OrthoRH
+		OrthoRH,
+		PerspectRH
 	};
 
 public:
-	Mat4 getView() const
+	const Mat4 getView() const
 	{
 		return lookAtRH(transform_.position, target_, up_);
 	}
-	Mat4 getProj() const
+	const Mat4 getProj() const
 	{
 		float width = static_cast<float>(res_.width);
 		float height = static_cast<float>(res_.height);
@@ -52,10 +54,31 @@ public:
 		switch (mode_)
 		{
 			case Mode::OrthoRH:
+				return orthoRH(-orthoWidth, orthoWidth, -orthoHeight, orthoHeight, nearZ, farZ);
+			case Mode::PerspectRH:
+				return perspectiveRH(fovRadian_, height/width, nearZ, farZ);;
 			default:
 				return orthoRH(-orthoWidth, orthoWidth, -orthoHeight, orthoHeight, nearZ, farZ);
 		};
 	}
+	
+	const Vector2<float> getOrthoFactor() const
+	{
+		return orthoFactor_;
+	}
+	Vec3& getMutableTarget()
+	{
+		return target_;
+	}
+	const Vec3& getTarget() const
+	{
+		return target_;
+	}
+	const float getFov() const
+	{
+		return fovRadian_;
+	}
+	
 	void setRes(const Resolution& res)
 	{
 		res_ = res;
@@ -64,21 +87,25 @@ public:
 	{
 		orthoFactor_ = res;
 	}
-	const Vector2<float> getOrthoFactor() const
-	{
-		return orthoFactor_;
-	}
 	void setTarget(const Vec3& target)
 	{
 		target_ = target;
 	}
-	const Vec3& getTarget() const
+	void setMode(Mode mode)
 	{
-		return target_;
+		mode_ = mode;
 	}
-	Vec3& getMutableTarget()
+	void setFov(float radian)
 	{
-		return target_;
+		fovRadian_ = radian;
+	}
+	void setPerspective()
+	{
+		setMode(Mode::PerspectRH);
+	}
+	void setOrtho()
+	{
+		setMode(Mode::OrthoRH);
 	}
 
 private:
@@ -87,6 +114,7 @@ private:
 	Mode mode_;
 	Resolution res_;
 	Vector2<float> orthoFactor_;
+	float fovRadian_{M_PI/4.0f};
 };
 
 }	 // namespace ns

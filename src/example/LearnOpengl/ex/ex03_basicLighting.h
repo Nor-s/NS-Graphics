@@ -140,6 +140,8 @@ public:
 		camera_.setOrthoFactor({(float) res.width/80, (float) res.height/80});
 		camera_.setPosition({300, 300, 300});
 		camera_.setTarget({0.0, 0.0, 0.0});
+		camera_.setFov(ns::math::ToRadian(45.0f));
+		camera_.setPerspective();
 	}
 
 	bool update(double deltaTime)
@@ -202,8 +204,6 @@ public:
 
 		// light
 		ImGuiEx::DragPropertyXYZ("light object", lightObject_.transform.position.value, 0.01f, -100.0f, 100.0f);
-
-
 
 		// camera
 		ImGuiEx::DragPropertyXYZ("camera pos", camera_.getMutableTransform().position.value, 1.0f, -400.0f, 400.0f);

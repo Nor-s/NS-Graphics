@@ -3,10 +3,8 @@
 
 #include "example.h"
 
-
 class Ex02_Coordinate : public Example
 {
-
 public:
 	const std::string& toString() override
 	{
@@ -46,7 +44,7 @@ public:
 		auto res = App::GetAppContext().res;
 		cube_.cube = ns::GlGeometry::genCube();
 		camera_.setRes(res);
-		camera_.setOrthoFactor({(float)res.width, (float)res.height});
+		camera_.setOrthoFactor({(float) res.width, (float) res.height});
 		camera_.setPosition({0, 0, 5});
 		camera_.setTarget({0.0, 0.0, 0.0});
 	}
@@ -61,7 +59,7 @@ public:
 			shader_.setMat4("transform", cube_.transform.get());
 			shader_.setMat4("view", camera_.getView());
 			shader_.setMat4("proj", camera_.getProj());
-				
+
 			glDrawElements(GL_TRIANGLES, cube_.cube->getIndexSize(), GL_UNSIGNED_INT, 0);
 			cube_.cube->getBuffer()->unbind();
 		}
@@ -74,7 +72,7 @@ public:
 		ImGuiEx::DragPropertyXYZ("scale", cube_.transform.scaleXYZ.value, 0.1f, 0.1f, 3.0f);
 		ImGuiEx::DragPropertyXYZ("translate", cube_.transform.position.value, 0.01f, -1.0f, 1.0f);
 		ImGui::DragFloat("angle", &angle_, 1.0f, -360.0f, 360.0f);
-		cube_.transform.radianXYZ.z = angle_*3.141592f/180.0f ;
+		cube_.transform.radianXYZ.z = angle_ * 3.141592f / 180.0f;
 
 		// camera
 		ImGuiEx::DragPropertyXYZ("camera pos", camera_.getMutableTransform().position.value, 0.1f, -10.0f, 10.0f);
@@ -89,6 +87,12 @@ public:
 		ImGui::DragFloat("ortho_factor_y", &ortho.y, 1.0f, 1.0f, 4000.f);
 
 		camera_.setOrthoFactor(ortho);
+
+		ImGui::Checkbox("Is Ortho", &bIsOrtho_);
+		camera_.setMode(bIsOrtho_ ? ns::CameraEntity::Mode::OrthoRH : ns::CameraEntity::Mode::PerspectRH);
+
+		ImGui::DragFloat("fov", &fov_, 1.0f, 0.0f, 360.f);
+		camera_.setFov(fov_ *(M_PI/180.0f));
 	}
 
 private:
@@ -98,6 +102,8 @@ private:
 	float angle_{};
 	ExEntity cube_;
 	ns::CameraEntity camera_;
+	bool bIsOrtho_ = false;
+	float fov_=45.0f;
 };
 
 #endif

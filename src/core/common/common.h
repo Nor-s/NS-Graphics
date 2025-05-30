@@ -7,6 +7,7 @@
 
 #include "nsTransform.h"
 #include "./logger.h"
+#include "mathUtil.h"
 
 namespace ns
 {
