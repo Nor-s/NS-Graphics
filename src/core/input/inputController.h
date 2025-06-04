@@ -19,9 +19,13 @@ public:
     }
 	virtual void execute(const InputValue& inputValue) = 0;
 
-    InputTrigger getInputTrigger()
+    InputTrigger getInputTrigger() const
     {
         return trigger_;
+    }
+    const InputAction& getAction() const 
+    {
+        return action_;
     }
 
 private:
