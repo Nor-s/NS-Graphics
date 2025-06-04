@@ -22,6 +22,14 @@ struct Vector2
 		};
 		T value[2]={0,};
 	};
+	Vector2()
+	{
+		memset(value, 0, sizeof value);
+	}
+	Vector2(T x, T y)
+		:x(x), y(y)
+	{
+	}
 	T& operator[](size_t col)
 	{
 		return value[col];
@@ -66,6 +74,14 @@ struct Vector3
 	{
 		return value[col];
 	}
+	explicit operator Vector2<T>() const
+	{
+		return Vector2<T>(x, y);
+	}	
+	explicit operator float() const
+	{
+		return x;
+	}	
 };
 
 template <typename T>
@@ -88,12 +104,19 @@ struct Vector4
 	{
 		memset(value, 0, sizeof value);
 	}
-	Vector4(T x, T y, T z, T a)
+	Vector4(T x, T y, T z, T w)
 	{
 		value[0] = x;
 		value[1] = y;
 		value[2] = z;
-		value[3] = a;
+		value[3] = w;
+	}
+	Vector4(Vector3<T> v, T w)
+	{
+		value[0] = v.x;
+		value[1] = v.y;
+		value[2] = v.z;
+		value[3] = w;
 	}
 	T& operator[](size_t col)
 	{
@@ -118,6 +141,12 @@ template <typename T>
 T operator*(const Vector3<T>& a, const Vector3<T>& b)
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+template <typename T>
+Vector2<T> operator-(const Vector2<T>& a, const Vector2<T>& b)
+{
+	return Vector2<T>{a.x - b.x, a.y - b.y};
 }
 
 template <typename T>

@@ -74,9 +74,9 @@ Mat4x4<T> rotateY(float radian)
 	auto s = std::sin(radian);
 	auto c = std::cos(radian);
 
-	rotation[0] = {c, 0, s, 0};		// x-axis
+	rotation[0] = {c, 0, -s, 0};		// x-axis
 	rotation[1] = {0, 1, 0, 0};		// y-axis
-	rotation[2] = {-s, 0, c, 0};	// z-axis
+	rotation[2] = {s, 0, c, 0};	// z-axis
 	rotation[3] = {0, 0, 0, 1};		// translate
 
 	return rotation;
@@ -98,6 +98,23 @@ Mat4x4<T> rotateZ(float radian)
 }
 
 template <typename T>
+Mat4x4<T> rotate(const Mat4x4<T>& transform, const ns::Vec3& axis, float radian)
+{
+	// Rodrigues' Rotation
+	Mat4x4<T> rotation;
+
+	auto s = std::sin(radian);
+	auto c = std::cos(radian);
+
+	rotation[0] = {(1-c)*axis.x*axis.x + c, (1-c)*axis.x*axis.y + s*axis.z, (1-c)*axis.x*axis.z - s*axis.y, 0};		// x-axis
+	rotation[1] = {(1-c)*axis.x*axis.y - s*axis.z, (1-c)*axis.y*axis.y + c, (1-c)*axis.y*axis.z + s*axis.x, 0};		// y-axis
+	rotation[2] = {(1-c)*axis.x*axis.z + s*axis.y, (1-c)*axis.y*axis.z - s*axis.x, (1-c)*axis.z*axis.z + c, 0};		// z-axis
+	rotation[3] = {0, 0, 0, 1};		// translate
+
+	return transform * rotation;
+}
+
+template <typename T>
 Mat4x4<T> rotateX(const Mat4x4<T>& transform, float radian)
 {
 	return transform * rotateX<T>(radian);
@@ -114,6 +131,7 @@ Mat4x4<T> rotateZ(const Mat4x4<T>& transform, float radian)
 {
 	return transform * rotateZ<T>(radian);
 }
+
 
 template <typename T>
 Mat4x4<T> lookAtRH(const Vector3<T>& eye, const Vector3<T>& at, const Vector3<T>& up)
