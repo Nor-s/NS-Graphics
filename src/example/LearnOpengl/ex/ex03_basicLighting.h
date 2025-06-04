@@ -29,6 +29,16 @@ public:
 		static const std::string ret = "ex03 basicLighting";
 		return ret;
 	}
+	~Ex03_BasicLighting()
+	{
+		destroy();
+	}
+	void destroy()
+	{
+		using namespace ns::editor;
+		App::SetCurrentInputController(nullptr);
+		inputController_ = std::make_unique<ns::InputController>();
+	}
 	void content() override
 	{
 		// shader
@@ -124,7 +134,7 @@ public:
 
 		auto res = App::GetAppContext().res;
 
-		cubeCount_ = 30;
+		cubeCount_ = 10;
 
 		// set cube object
 		object_.cube = ns::GlGeometry::genCubeWithNormal();
@@ -138,12 +148,30 @@ public:
 		// set camera
 		camera_.setRes(res);
 		camera_.setOrthoFactor({(float) res.width/80, (float) res.height/80});
-		camera_.setPosition({300, 300, 300});
+		camera_.setPosition({100, 100, 100});
 		camera_.setTarget({0.0, 0.0, 0.0});
 		camera_.setFov(ns::math::ToRadian(45.0f));
 		camera_.setPerspective();
-	}
 
+		// input controller
+		inputController_ = std::make_unique<ns::InputController>();
+		inputController_->bindAction(
+			ns::InputAction(ns::InputType::MOUSE_LEFT_DOWN),
+			ns::InputTrigger::Started,this,
+			&Ex03_BasicLighting::moveStartCamera
+		);
+		inputController_->bindAction(
+			ns::InputAction(ns::InputType::MOUSE_LEFT_DOWN),
+			ns::InputTrigger::Triggered,this,
+			&Ex03_BasicLighting::moveCamera
+		);
+		inputController_->bindAction(
+			ns::InputAction(ns::InputType::MOUSE_WHEEL),
+			ns::InputTrigger::Triggered, this,
+			&Ex03_BasicLighting::moveWheel
+		);
+		App::SetCurrentInputController(inputController_.get());
+	}
 	bool update(double deltaTime)
 	{
 		basicLightShader_.use();
@@ -223,7 +251,89 @@ public:
 
 		camera_.setOrthoFactor(ortho);
 		camera_.setOrthoFactor({(float) windowRes.width/f, (float) windowRes.height/f});
+
+		if(ImGui::IsWindowFocused())
+		{
+			App::SetCurrentInputController(nullptr);
+		}
+		else 
+		{
+			App::SetCurrentInputController(inputController_.get());
+		}
 	}
+
+public:
+	void moveStartCamera(const ns::InputValue& value)
+	{
+		beforeMousePos_ = value.get<ns::Vec2>();
+		NS_LOG("start camera, x {}, y {}", beforeMousePos_.x, beforeMousePos_.y);
+	}
+	void moveCamera(const ns::InputValue& value)
+	{
+		// camera Pos -  camera Target 
+		auto currentMousePos = value.get<ns::Vec2>();
+		auto delta =  currentMousePos - beforeMousePos_;
+		beforeMousePos_ = currentMousePos;
+		delta.x*=-1.0f;
+
+		auto at = camera_.getTarget();
+		auto up = camera_.getUp();
+		auto eye = camera_.getTransform().position;
+		auto relCameraPos = eye - at;
+		auto forwardDir = ns::normalize(relCameraPos);
+		auto rightDir = ns::normalize(ns::cross(up, forwardDir));
+		auto upDir = ns::normalize(ns::cross(forwardDir, rightDir));
+		auto len = ns::length2(relCameraPos);
+
+		auto nextRelPos = relCameraPos + upDir*delta.y + rightDir * delta.x;
+
+		auto targetDir = ns::normalize(nextRelPos);
+		auto theta = acos(targetDir*forwardDir);
+
+		if(theta < 0.001f)
+		{
+			return;
+		}
+		auto axis = ns::cross(forwardDir, targetDir);
+		if(ns::length2(axis) < 0.001f)
+		{
+			return;
+		}
+		axis = ns::normalize(axis);
+
+		auto rot = ns::rotate(ns::Mat4(), axis, theta);
+		auto nextRelP = static_cast<ns::Vec3>(rot*ns::Vec4(relCameraPos, 1.0f));
+		auto nextDot = ns::normalize(nextRelP) * up;
+		if(abs(nextDot) > 0.97f)
+		{
+			return;
+		}
+
+		camera_.getMutableTransform().position = nextRelP + at;
+
+		NS_LOG("move camera, x {}, y {}", delta.x, delta.y);
+	}
+	void moveWheel(const ns::InputValue& value)
+	{
+		float speed = 1.0f;
+		float x = value.get<float>();
+
+		auto at = camera_.getTarget();
+		auto up = camera_.getUp();
+		auto eye = camera_.getTransform().position;
+		auto relCameraPos = eye - at;
+		auto forwardDir = ns::normalize(relCameraPos);
+
+		auto next = forwardDir*speed*x + relCameraPos;
+
+		if(ns::length2(next) > 30.0f)
+		{
+			camera_.getMutableTransform().position = next + at;
+		}
+
+		NS_LOG("move wheel, x {}", x);
+	}
+
 
 private:
 	int cubeCount_ = 1;
@@ -241,6 +351,7 @@ private:
 	ExEntity lightObject_;
 
 	ns::CameraEntity camera_;
+	ns::Vec2 beforeMousePos_;
 };
 
 #endif

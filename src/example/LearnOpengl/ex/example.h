@@ -10,7 +10,6 @@
 #include <editor/app.h>
 #include <editor/imgui/imguiComponents.h>
 
-
 #include <nengine.h>
 
 struct ExEntity
@@ -22,7 +21,12 @@ struct ExEntity
 class Example
 {
 public:
+	virtual ~Example()
+	{
+		inputController_.reset();
+	}
 	virtual const std::string& toString() = 0;
+	virtual void destroy(){};
     virtual void content()=0;
 	virtual bool update(double deltaTime)
 	{
@@ -30,6 +34,13 @@ public:
 	}
 	virtual void drawUIWidgets(){}
 	virtual void drawUIWindows(){}
+	ns::InputController* getInputController()
+	{
+		return inputController_.get();
+	}
+
+protected:
+	std::unique_ptr<ns::InputController> inputController_;
 };
 
 #endif

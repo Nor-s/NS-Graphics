@@ -9,20 +9,22 @@ namespace vst
 
 class Event
 {
-    public:
-    virtual void execute() = 0;
+public:
+	virtual void execute() = 0;
 };
 
 class SceneRenderTargetResizeEvent : public Event
 {
 public:
-	SceneRenderTargetResizeEvent(const ns::Resolution& resolution)
+	SceneRenderTargetResizeEvent(int sceneId, const ns::Resolution& resolution)
+		: sceneId_(sceneId), resolution_(resolution)
 	{
-        resolution_ = resolution;
 	}
-    void execute() override;
+	void execute() override;
+
 private:
-    ns::Resolution resolution_;
+	int sceneId_;
+	ns::Resolution resolution_;
 };
 
 class VST : public ns::editor::App
@@ -34,11 +36,11 @@ public:
 	{
 		events_.push_back(std::move(event));
 	}
-    void initScene(const ns::Resolution& res);
-    uint64_t getSceneImage();
+	void initScene(const ns::Resolution& res);
+	uint64_t getSceneImage(int sceneId);
 
 protected:
-    virtual void preProcessEvent() override final;
+	virtual void preProcessEvent() override final;
 	virtual void initEnd() override final;
 	virtual void draw() override final;
 	virtual void addImguiModule() override final;

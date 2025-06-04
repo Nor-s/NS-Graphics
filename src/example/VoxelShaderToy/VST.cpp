@@ -33,7 +33,7 @@ void VST::initScene(const ns::Resolution& res)
 	);
 }
 
-uint64_t VST::getSceneImage()
+uint64_t VST::getSceneImage(int sceneId)
 {
 	if(VST::g_vst->sceneRenderTarget_ == nullptr) return 0u;
 	return VST::g_vst->sceneRenderTarget_->getColorTexture();
@@ -69,15 +69,20 @@ void VST::addImguiModule()
 	sdlWindow_->addImguiModule(std::make_unique<ImguiTextEditor>());
 	sdlWindow_->addImguiModule(std::make_unique<ImguiSceneWindow>(ImguiSceneWindow::Context{
 		.title="scene",
+		.sceneId=0,
 		.resolution = sceneRenderTarget_->getresolution(),
-		.resizeCallback = [](const ns::Resolution& res){
+		.resizeCallback = [](int sceneId, const ns::Resolution& res){
 			if(VST::g_vst)
 			{
-				VST::g_vst->pushEvent(std::make_unique<SceneRenderTargetResizeEvent>(res));
+				VST::g_vst->pushEvent(std::make_unique<SceneRenderTargetResizeEvent>(sceneId, res));
 			}
 		},
-		.getImage = [](){
-			return VST::g_vst->getSceneImage();
+		.getImage = [](int sceneId){
+			return VST::g_vst->getSceneImage(sceneId);
+		},
+		.changeFocus = [](int sceneId, bool bIsFocus)
+		{
+			NS_LOG("changeFocus");
 		}
 	}));
 }

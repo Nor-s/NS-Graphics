@@ -14,6 +14,15 @@
 
 using namespace ns::editor;
 
+LearnGL::~LearnGL()
+{
+	for(auto& example : examples_)
+	{
+		example.reset();
+	}
+	examples_.clear();
+}
+
 void LearnGL::addImguiModule()
 {
 	sdlWindow_->addImguiModule(std::make_unique<ImguiExampleWindow>(this));
@@ -35,6 +44,7 @@ void LearnGL::draw()
 
 void LearnGL::setExample(size_t idx)
 {
+	examples_[currentExampleIndex_]->destroy();
 	currentExampleIndex_ = idx;
 	examples_[currentExampleIndex_]->content();
 }
@@ -46,4 +56,9 @@ void LearnGL::drawExampleUIWidgets()
 void LearnGL::drawExampleUIWindows()
 {
 	examples_[currentExampleIndex_]->drawUIWindows();
+}
+
+void LearnGL::initDefaultInputController()
+{
+	defaultInputController_ = std::make_unique<ns::InputController>();
 }
