@@ -5,9 +5,13 @@
 #include <imgui_impl_sdl2.h>
 
 #include "../imgui/imguiLayer.h"
+#include "../app.h"
+#include "core/input/inputController.h"
 
 namespace ns::editor
 {
+
+bool g_bIsHoldMouseLeft = false;
 
 SDLWindow::SDLWindow(const AppContext& appContext, const SystemContext& sysContext)
 	: appContext_(appContext), sysContext_(sysContext)
@@ -79,11 +83,21 @@ void SDLWindow::processEvent(SystemIO& io)
 		while (SDL_PollEvent(&event))
 		{
 			ImGui_ImplSDL2_ProcessEvent(&event);
+			processMouseEvent(event);
+
 			if (event.type == SDL_QUIT)
 				done = true;
+
 			if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE &&
 				event.window.windowID == SDL_GetWindowID(handle_))
 				done = true;
+			
+
+			if (event.type == SDL_MOUSEMOTION)
+			{
+				io.mousePos.y =  event.motion.y;
+				io.mousePos.x =  event.motion.x;
+			}
 		}
 		if (SDL_GetWindowFlags(handle_) & SDL_WINDOW_MINIMIZED)
 		{
@@ -92,12 +106,23 @@ void SDLWindow::processEvent(SystemIO& io)
 		}
 		break;
 	}
+
+	if (g_bIsHoldMouseLeft)
+	{
+		auto& inputController = App::GetMutableRefInputController();
+
+		auto offset = imguiLayer_->getMouseOffset();
+		auto x = io.mousePos.x + offset.x;
+		auto y = io.mousePos.y + offset.y;
+
+		inputController.broadcast(InputType::MOUSE_LEFT_DOWN, InputTrigger::Triggered, {x, y});
+	}
 }
 
 void SDLWindow::predraw(SystemIO& io)
 {
 	static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-	glEnable(GL_DEPTH_TEST);  
+	glEnable(GL_DEPTH_TEST);
 
 	glViewport(0, 0, (int) appContext_.res.width, (int) appContext_.res.height);
 	glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w,
@@ -117,6 +142,42 @@ void SDLWindow::postdraw(SystemIO& io)
 void SDLWindow::addImguiModule(std::unique_ptr<IImguiModule> module)
 {
 	imguiLayer_->addModule(std::move(module));
+}
+
+void SDLWindow::resetInputState()
+{
+	bIsMouseLeftHold_ = false;
+}
+
+void SDLWindow::processMouseEvent(const SDL_Event& event)
+{
+	auto& inputController = App::GetMutableRefInputController();
+
+	auto offset = imguiLayer_->getMouseOffset();
+	auto x = event.motion.x + offset.x;
+	auto y = event.motion.y + offset.y;
+	bool bBeforeIsLeftHold = bIsMouseLeftHold_;
+
+	if(event.type == SDL_MOUSEWHEEL)
+	{
+		NS_CRITICAL("wheel: {} {}", event.motion.x, event.motion.y);
+		inputController.broadcast(InputType::MOUSE_WHEEL, InputTrigger::Triggered, ns::InputValue(event.motion.x));
+	}
+
+	if (event.button.button == SDL_BUTTON_LEFT)
+	{
+		if (event.type == SDL_MOUSEBUTTONUP)
+		{
+			bIsMouseLeftHold_ = false;
+			inputController.broadcast(InputType::MOUSE_LEFT_DOWN, InputTrigger::Ended, {x, y});
+		}
+		else if (bIsMouseLeftHold_ == false && event.type == SDL_MOUSEBUTTONDOWN)
+		{
+			bIsMouseLeftHold_ = true;
+			inputController.broadcast(InputType::MOUSE_LEFT_DOWN, InputTrigger::Started, {x, y});
+		}
+	}
+	g_bIsHoldMouseLeft = bBeforeIsLeftHold && bIsMouseLeftHold_;
 }
 
 }	 // namespace ns::editor

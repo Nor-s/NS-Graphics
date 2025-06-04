@@ -15,6 +15,15 @@ public:
 	ImguiLayer(void* window, SystemContext SystemContext);
 	~ImguiLayer();
 
+	void setMouseOffset(ns::Vec2 offset)
+	{
+		mouseOffset_ = offset;
+	}
+	ns::Vec2 getMouseOffset() const
+	{
+		return mouseOffset_;
+	}
+
 protected:
 	friend class SDLWindow;
 	void predraw();
@@ -36,7 +45,10 @@ private:
 	bool bIsDocMode_ = true;
 
 	std::vector<std::unique_ptr<IImguiModule>> modules_;
+
+	ns::Vec2 mouseOffset_ = ns::Vec2(0.0f, 0.0f);
 };
+
 }	 // namespace ns::editor
 
 #endif

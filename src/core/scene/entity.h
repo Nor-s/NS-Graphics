@@ -56,12 +56,12 @@ public:
 			case Mode::OrthoRH:
 				return orthoRH(-orthoWidth, orthoWidth, -orthoHeight, orthoHeight, nearZ, farZ);
 			case Mode::PerspectRH:
-				return perspectiveRH(fovRadian_, height/width, nearZ, farZ);;
+				return perspectiveRH(fovRadian_, height / width, nearZ, farZ);
 			default:
 				return orthoRH(-orthoWidth, orthoWidth, -orthoHeight, orthoHeight, nearZ, farZ);
 		};
 	}
-	
+
 	const Vector2<float> getOrthoFactor() const
 	{
 		return orthoFactor_;
@@ -78,7 +78,11 @@ public:
 	{
 		return fovRadian_;
 	}
-	
+	const Vec3 getUp() const
+	{
+		return up_;
+	}
+
 	void setRes(const Resolution& res)
 	{
 		res_ = res;
@@ -114,7 +118,7 @@ private:
 	Mode mode_;
 	Resolution res_;
 	Vector2<float> orthoFactor_;
-	float fovRadian_{M_PI/4.0f};
+	float fovRadian_{M_PI / 4.0f};
 };
 
 }	 // namespace ns

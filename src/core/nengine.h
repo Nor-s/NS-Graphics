@@ -10,5 +10,9 @@
 #include "scene/entity.h"
 
 
+#include "input/inputController.h"
+#include "input/inputAction.h"
+#include "input/input.h"
+
 
 #endif

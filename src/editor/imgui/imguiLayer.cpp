@@ -31,6 +31,7 @@ ImguiLayer::~ImguiLayer()
 }
 void ImguiLayer::predraw()
 {
+	setMouseOffset({0.0f, 0.0f});
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
@@ -133,6 +134,7 @@ void ImguiLayer::initSDL2OpenGL(void* window)
 
 void ImguiLayer::addModule(std::unique_ptr<IImguiModule> module)
 {
+	module->parent_ = this;
 	modules_.emplace_back(std::move(module));
 }
 

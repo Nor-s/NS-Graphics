@@ -36,9 +36,11 @@ public:
 	void postdraw(SystemIO& io);
 
 	void addImguiModule(std::unique_ptr<IImguiModule> imguiModule);
+	void resetInputState();
 
 private:
 	void initGL();
+	void processMouseEvent(const SDL_Event& event);
 
 private:
 	AppContext appContext_;
@@ -47,6 +49,9 @@ private:
 	SDL_GLContext context_;
 
 	std::unique_ptr<ImguiLayer> imguiLayer_;
+
+	// input
+	bool bIsMouseLeftHold_ = false;
 };
 
 }	 // namespace ns::editor
