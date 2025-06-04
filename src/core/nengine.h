@@ -8,6 +8,7 @@
 #include "platform/platformEvent.h"
 
 #include "scene/entity.h"
+#include "scene/nsScene.h"
 
 
 #include "input/inputController.h"

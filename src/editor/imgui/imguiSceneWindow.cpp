@@ -4,6 +4,8 @@
 #include <imgui_internal.h>
 
 #include "imguiLayer.h"
+#include "../app.h"
+#include "../event/events.h"
 
 namespace ns::editor
 {
@@ -11,6 +13,32 @@ namespace ns::editor
 ImVec2 ResToImVec2(const ns::Resolution& res)
 {
 	return ImVec2{static_cast<float>(res.width), static_cast<float>(res.height)};
+}
+
+ImguiSceneWindow::ImguiSceneWindow(const Context& context)
+	: context_(context)
+{
+	if(context_.getImage == nullptr)
+	{
+		context_.getImage = [](int sceneId) -> uint64_t
+		{
+			return App::GetSceneImage(sceneId);
+		};
+	}
+	if(context_.resizeCallback == nullptr)
+	{
+		context_.resizeCallback = [](int sceneId, const ns::Resolution& resolution)
+		{
+			App::PushEvent<SceneRenderTargetResizeEvent>(sceneId, resolution);
+		};
+	}
+	if(context_.changeFocusCallback == nullptr)
+	{
+		context_.changeFocusCallback = [](int sceneId, bool bIsFocus)
+		{
+			App::PushEvent<SceneFocusEvent>(sceneId, bIsFocus);
+		};
+	}
 }
 
 void ImguiSceneWindow::draw()
@@ -50,10 +78,10 @@ void ImguiSceneWindow::draw()
 			// focused callback
 			ImGuiWindow* window = ImGui::GetCurrentWindow();
 			bool bIsFocused = ImGui::IsWindowFocused() && ImGui::IsWindowHovered() && ImGui::IsMouseHoveringRect(window->InnerRect.Min, window->InnerRect.Max);
-			if(context_.changeFocus != nullptr && bIsFocused != context_.bIsFocus)
+			if(context_.changeFocusCallback != nullptr && bIsFocused != context_.bIsFocus)
 			{
 				context_.bIsFocus = bIsFocused;
-				context_.changeFocus(context_.sceneId, bIsFocused);
+				context_.changeFocusCallback(context_.sceneId, bIsFocused);
 			}
 			if(bIsFocused) setMouseOffset();
 		}

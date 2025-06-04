@@ -9,59 +9,13 @@
 
 using namespace ns::editor;
 
-
 namespace vst
 {
 
-
-
-VST* VST::g_vst = nullptr;
-
-void SceneRenderTargetResizeEvent::execute()
-{
-	VST::g_vst->initScene(resolution_);
-}
-
-void VST::initScene(const ns::Resolution& res) 
-{
-	sceneRenderTarget_ = ns::GlRenderTarget::gen(
-		ns::GlRenderTarget::Spec{
-			.colorFormat = {ns::ColorFormat::RGBA8},
-			.depthFormat = ns::DepthFormat::DEPTH24_STENCIL8,
-			.resolution = res
-		}
-	);
-}
-
-uint64_t VST::getSceneImage(int sceneId)
-{
-	if(VST::g_vst->sceneRenderTarget_ == nullptr) return 0u;
-	return VST::g_vst->sceneRenderTarget_->getColorTexture();
-}
-
-void VST::preProcessEvent() 
-{
-	for(auto& event: events_)
-	{
-		event->execute();
-	}
-	events_.clear();
-}
-
 void VST::initEnd()
 {
-	g_vst = this;
-	initScene(appContext_.res);
-}
-
-void VST::draw()
-{
-	GLCHECK(glBindFramebuffer(GL_FRAMEBUFFER, sceneRenderTarget_->getFbo()));
-	auto rect = sceneRenderTarget_->getViewport();
-	GLCHECK(glViewport(rect.x, rect.y, rect.w, rect.h));
-	GLCHECK(glClearColor(1.0f, 1.0, 0, 1.0f));
-	GLCHECK(glClear(GL_COLOR_BUFFER_BIT));
-	GLCHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+	sceneList_.push_back(std::make_unique<ns::Scene>());
+	sceneList_[0]->init(appContext_.res);
 }
 
 void VST::addImguiModule()
@@ -70,20 +24,7 @@ void VST::addImguiModule()
 	sdlWindow_->addImguiModule(std::make_unique<ImguiSceneWindow>(ImguiSceneWindow::Context{
 		.title="scene",
 		.sceneId=0,
-		.resolution = sceneRenderTarget_->getresolution(),
-		.resizeCallback = [](int sceneId, const ns::Resolution& res){
-			if(VST::g_vst)
-			{
-				VST::g_vst->pushEvent(std::make_unique<SceneRenderTargetResizeEvent>(sceneId, res));
-			}
-		},
-		.getImage = [](int sceneId){
-			return VST::g_vst->getSceneImage(sceneId);
-		},
-		.changeFocus = [](int sceneId, bool bIsFocus)
-		{
-			NS_LOG("changeFocus");
-		}
+		.resolution = sceneList_[0]->getResolution()
 	}));
 }
 

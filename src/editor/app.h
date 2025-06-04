@@ -4,12 +4,15 @@
 #include <string>
 #include <memory>
 #include "common/env.h"
-#include "platform/platformEvent.h"
+#include <platform/platformEvent.h>
+#include "event/eventController.h"
 
 namespace ns
 {
 class InputController;
+class Scene;
 }
+
 namespace ns::editor
 {
 
@@ -28,21 +31,24 @@ public:
 	{
 		return g_app->getMutableInputController();
 	}
+
 	static void SetCurrentInputController(InputController* inputController);
-	
+
+	static uint64_t GetSceneImage(int sceneId);
+	static void SceneResize(int sceneId, const ns::Resolution& resolution);
+	static void SetSceneFocus(int sceneId, bool bIsFocus);
+
+	template <typename EventType, typename... Args>
+	static void PushEvent(Args&&... args)
+	{
+		g_app->eventController_->push(std::make_unique<EventType>(std::forward<Args>(args)...));
+	}
 
 public:
 	App();
 	virtual ~App();
 
-	void init(AppContext appContext, SystemContext systemContext)
-	{
-		initBegin();
-		appContext_ = std::move(appContext);
-		sysContext_ = std::move(systemContext);
-		initWindow();
-		initEnd();
-	}
+	void init(AppContext appContext, SystemContext systemContext);
 	virtual void run();
 
 protected:
@@ -53,20 +59,21 @@ protected:
 	{
 	}
 	virtual void predraw() {};
-	virtual void draw()
-	{
-	}
+	virtual void draw();
 	virtual void postdraw() {};
 	virtual InputController& getMutableInputController();
 	virtual void initDefaultInputController();
+	virtual void initEventController();
 
 protected:
-	std::unique_ptr<SDLWindow> sdlWindow_;
 	AppContext appContext_;
 	SystemContext sysContext_;
 	SystemIO io_;
+	InputController* currentInputController_;
+	std::unique_ptr<SDLWindow> sdlWindow_;
 	std::unique_ptr<InputController> defaultInputController_;
-	InputController* currentInputController_ = nullptr;
+	std::unique_ptr<EventController> eventController_ = nullptr;
+	std::vector<std::unique_ptr<ns::Scene>> sceneList_;
 
 private:
 	void initWindow();

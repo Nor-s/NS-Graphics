@@ -48,12 +48,15 @@ nsgraphics_src =[
 'src/core/common/logger.cpp',
 'src/core/common/nsTransform.cpp',
 
+'src/core/scene/nsScene.cpp',
 'src/core/gpu/gl/glRenderTarget.cpp',
 'src/core/gpu/gl/glShader.cpp',
 'src/core/gpu/gl/glGeometry.cpp',
 'src/core/gpu/gl/glBuffer.cpp',
 
 'src/editor/app.cpp',
+'src/editor/event/events.cpp',
+'src/editor/event/simpleEventQueue.cpp',
 'src/editor/window/SDLWindow.cpp',
 'src/editor/imgui/imguiLayer.cpp',
 'src/editor/imgui/imguiWindow.cpp',

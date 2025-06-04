@@ -23,13 +23,11 @@ public:
 		ns::Resolution resolution;
 		void (*resizeCallback)(int, const ns::Resolution&) = nullptr;
 		uint64_t (*getImage)(int) = nullptr;
-		void (*changeFocus)(int, bool) = nullptr;
+		void (*changeFocusCallback)(int, bool) = nullptr;
 	};
 
 public:
-	ImguiSceneWindow(const Context& context) : context_(context)
-	{
-	}
+	ImguiSceneWindow(const Context& context);
 	~ImguiSceneWindow() = default;
 	virtual void draw() override;
 
