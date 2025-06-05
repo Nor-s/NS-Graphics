@@ -266,6 +266,7 @@ public:
 	void moveStartCamera(const ns::InputValue& value)
 	{
 		beforeMousePos_ = value.get<ns::Vec2>();
+		beforeCameraPos_ = camera_.getTransform().position; 
 		NS_LOG("start camera, x {}, y {}", beforeMousePos_.x, beforeMousePos_.y);
 	}
 	void moveCamera(const ns::InputValue& value)
@@ -273,12 +274,13 @@ public:
 		// camera Pos -  camera Target 
 		auto currentMousePos = value.get<ns::Vec2>();
 		auto delta =  currentMousePos - beforeMousePos_;
-		beforeMousePos_ = currentMousePos;
-		delta.x*=-1.0f;
+		// beforeMousePos_ = currentMousePos;
+		delta.x*= -cameraSpeed_;
+		delta.y*= cameraSpeed_;
 
 		auto at = camera_.getTarget();
 		auto up = camera_.getUp();
-		auto eye = camera_.getTransform().position;
+		auto eye = beforeCameraPos_;
 		auto relCameraPos = eye - at;
 		auto forwardDir = ns::normalize(relCameraPos);
 		auto rightDir = ns::normalize(ns::cross(up, forwardDir));
@@ -290,10 +292,6 @@ public:
 		auto targetDir = ns::normalize(nextRelPos);
 		auto theta = acos(targetDir*forwardDir);
 
-		if(theta < 0.001f)
-		{
-			return;
-		}
 		auto axis = ns::cross(forwardDir, targetDir);
 		if(ns::length2(axis) < 0.001f)
 		{
@@ -350,8 +348,11 @@ private:
 	ExEntity object_;
 	ExEntity lightObject_;
 
+	// for camera
 	ns::CameraEntity camera_;
 	ns::Vec2 beforeMousePos_;
+	ns::Vec3 beforeCameraPos_;
+	float cameraSpeed_ = 1.0f;
 };
 
 #endif
