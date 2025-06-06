@@ -1,7 +1,12 @@
 #ifndef _NS_GRAPHICS_CORE_SCENE_ENTITY_H_
 #define _NS_GRAPHICS_CORE_SCENE_ENTITY_H_
 
+#include <concepts>
+#include <vector>
+#include <memory>
+
 #include "../common/common.h"
+#include "component/component.h"
 
 namespace ns
 {
@@ -9,6 +14,27 @@ namespace ns
 class Entity
 {
 public:
+	virtual ~Entity() = default;
+
+	virtual void onAwake(){}
+	virtual void onStart(){}
+	virtual void onEnable(){}
+	virtual void onUpdate(){
+		for(auto& component: components_)
+		{
+			component->update();
+		}
+	}
+	virtual void onLateUpdate(){}
+	virtual void onRender(){
+		for(auto& component: components_)
+		{
+			component->render();
+		}
+	}
+	virtual void onDisable(){}
+	virtual void onDestroy(){}
+
 	void setPosition(const Vec3& position)
 	{
 		transform_.position = position;
@@ -22,8 +48,37 @@ public:
 		return transform_;
 	}
 
+    template <class T>
+    T *getComponent()
+    {
+        for (const auto &component : components_)
+        {
+            if (component->getType() == T::type)
+            {
+                return static_cast<T *>(component.get());
+            }
+        }
+        return nullptr;
+    }
+    template <typename T>
+    T *addComponent()
+    {
+        if (auto *component = getComponent<T>(); component)
+        {
+            return component;
+        }
+        auto component = std::make_unique<T>();
+        auto *ret = component.get();
+        ret->owner_ = this;
+
+        components_.push_back(std::move(component));
+        return ret;
+    }
+
 protected:
 	Transform transform_;
+    std::vector<std::unique_ptr<Component>> components_;
+
 };
 
 class CameraEntity : public Entity

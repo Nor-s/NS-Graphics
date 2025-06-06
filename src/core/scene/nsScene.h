@@ -2,12 +2,13 @@
 #define _NS_GRAPHICS_CORE_SCENE_SCEHE_H_
 
 #include <vector>
-#include "entity.h"
+#include "../entity/entity.h"
 #include "../platform/platformEvent.h"
-#include "../gpu/gpu.h"
 
 namespace ns
 {
+class GlRenderTarget;
+
 class Scene
 {
     using EntityId = Entity*;
@@ -15,17 +16,23 @@ class Scene
 
 public:
     Scene();
-    virtual ~Scene() = default;
-    void init(const Resolution& res);
-    void draw(const SystemIO& io);
+    virtual ~Scene();
+    virtual void init(const Resolution& res);
+    virtual void resize(const Resolution& res);
+    virtual void draw(){};
     uint64_t getSceneImage();
     Resolution getResolution();
 
+    virtual void onUpdate();
+    virtual void onRender();
+
+protected:
+    int getRenderId() const;
+
 private:
-	std::unique_ptr<RenderTarget> sceneRenderTarget_;
+	std::unique_ptr<GlRenderTarget> sceneRenderTarget_;
     std::shared_ptr<CameraEntity> currentCamera_ = nullptr;
     Entities entities_;
-    Entities drawList_;
     // std::shared_ptr<PlayerEntity> player_ = nullptr;
 };
 

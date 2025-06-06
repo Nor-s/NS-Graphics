@@ -8,7 +8,6 @@
 namespace ns
 {
 
-using RenderTarget = GlRenderTarget;
 
 }
 

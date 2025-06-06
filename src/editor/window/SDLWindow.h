@@ -26,7 +26,7 @@ public:
 	{
 		return handle_;
 	}
-	SDL_GLContext& getGLContext()
+	SDL_GLContext getGLContext()
 	{
 		return context_;
 	}

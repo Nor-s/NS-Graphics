@@ -3,15 +3,15 @@
 
 #include <string>
 #include <memory>
-#include "common/env.h"
 #include <platform/platformEvent.h>
+#include "common/env.h"
 #include "event/eventController.h"
 
 namespace ns
 {
 class InputController;
 class Scene;
-}
+}	 // namespace ns
 
 namespace ns::editor
 {
@@ -31,12 +31,15 @@ public:
 	{
 		return g_app->getMutableInputController();
 	}
+	static SystemIO& GetIO()
+	{
+		return g_app->io_;
+	}
+	static uint64_t GetSceneImage(int sceneId);
 
 	static void SetCurrentInputController(InputController* inputController);
-
-	static uint64_t GetSceneImage(int sceneId);
-	static void SceneResize(int sceneId, const ns::Resolution& resolution);
 	static void SetSceneFocus(int sceneId, bool bIsFocus);
+	static void SceneResize(int sceneId, const ns::Resolution& resolution);
 
 	template <typename EventType, typename... Args>
 	static void PushEvent(Args&&... args)
@@ -64,6 +67,10 @@ protected:
 	virtual InputController& getMutableInputController();
 	virtual void initDefaultInputController();
 	virtual void initEventController();
+	virtual void initScene();
+
+private:
+	void update();
 
 protected:
 	AppContext appContext_;

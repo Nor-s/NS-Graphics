@@ -7,7 +7,8 @@
 
 #include "platform/platformEvent.h"
 
-#include "scene/entity.h"
+#include "entity/component/component.h"
+#include "entity/entity.h"
 #include "scene/nsScene.h"
 
 
