@@ -12,8 +12,7 @@ class Timer
 public:
 	Timer()
 	{
-		start_ = std::chrono::system_clock::now();
-		before_ = start_;
+		reset();
 	}
 	~Timer()
 	{
@@ -38,6 +37,11 @@ public:
 		double ret = duration(before_, end);
 		before_ = end;
 		return ret;
+	}
+	void reset()
+	{
+		start_ = std::chrono::system_clock::now();
+		before_ = start_;
 	}
 
 private:
