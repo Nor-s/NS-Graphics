@@ -10,10 +10,10 @@ Logger::Logger()
 {
 	std::vector<spdlog::sink_ptr> logSinks;
 	logSinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
-	logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>(g_prefix + ".log", true));
+	// logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>(g_prefix + ".log", true));
 
 	logSinks[0]->set_pattern("%^[%n][%H:%M:%S.%e --%L] %v%$ {%s::%! #%#}");
-	logSinks[1]->set_pattern("[%n][%L][%H:%M:%S.%e] %v");
+	// logSinks[1]->set_pattern("[%n][%L][%H:%M:%S.%e] %v");
 
 	g_logger = std::make_shared<spdlog::logger>(g_prefix, begin(logSinks), end(logSinks));
 	spdlog::register_logger(g_logger);

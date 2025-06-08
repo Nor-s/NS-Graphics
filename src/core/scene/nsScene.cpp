@@ -11,6 +11,7 @@ Scene::~Scene() = default;
 
 void Scene::init(const Resolution& res)
 {
+	sceneRenderTarget_.reset();
     sceneRenderTarget_ = ns::GlRenderTarget::gen(
 		ns::GlRenderTarget::Spec{
 			.colorFormat = {ns::ColorFormat::RGBA8},
@@ -22,6 +23,7 @@ void Scene::init(const Resolution& res)
 
 void Scene::resize(const Resolution& res)
 {
+  sceneRenderTarget_.reset();
   sceneRenderTarget_ = ns::GlRenderTarget::gen(
 		ns::GlRenderTarget::Spec{
 			.colorFormat = {ns::ColorFormat::RGBA8},
