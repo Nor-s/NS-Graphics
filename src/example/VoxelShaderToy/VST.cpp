@@ -15,7 +15,6 @@ namespace vst
 void VST::initEnd()
 {
 	sceneList_.push_back(std::make_unique<ns::Scene>());
-	sceneList_[0]->init(appContext_.res);
 }
 
 void VST::addImguiModule()

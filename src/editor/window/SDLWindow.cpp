@@ -158,6 +158,11 @@ void SDLWindow::processMouseEvent(const SDL_Event& event)
 	auto y = event.motion.y + offset.y;
 	bool bBeforeIsLeftHold = bIsMouseLeftHold_;
 
+	if (event.type == SDL_MOUSEMOTION)
+	{
+		inputController.broadcast(InputType::MOUSE_MOVE, InputTrigger::Triggered, ns::InputValue(x,y));
+	}
+
 	if(event.type == SDL_MOUSEWHEEL)
 	{
 		NS_CRITICAL("wheel: {} {}", event.motion.x, event.motion.y);

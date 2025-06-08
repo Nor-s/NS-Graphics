@@ -13,6 +13,7 @@ void SimpleEventQueue::processEvent()
     for(auto& event: events_)
     {
         event->execute();
+        event.reset();
     }
     events_.clear();
 }

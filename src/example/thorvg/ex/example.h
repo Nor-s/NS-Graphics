@@ -1,24 +1,35 @@
 #ifndef _TVGEX_EXAMPLE_H_
 #define _TVGEX_EXAMPLE_H_
 
+#include <nengine.h>
 #include <thorvg.h>
 #include <imgui.h>
-#include <nengine.h>
 
 namespace tvgex::example
 {
 
-class Example
+class Example 
 {
 public:
+	virtual ~Example()
+	{
+		inputController_.reset();
+	}
 	virtual const std::string& toString() = 0;
 	virtual bool content(tvg::Canvas* canvas, uint32_t w, uint32_t h) = 0;
 	virtual bool update(tvg::Canvas* canvas, double deltaTime)
 	{
 		return false;
 	}
+	virtual void resize(const ns::Resolution& res){}
 	virtual void drawUIWidgets(){}
 	virtual void drawUIWindows(){}
+	ns::InputController* getInputController()
+	{
+		return inputController_.get();
+	}
+protected:
+		std::unique_ptr<ns::InputController> inputController_;
 };
 
 }	 // namespace tvgex::example

@@ -9,6 +9,7 @@ namespace ns
 enum class InputType : uint8_t
 {
 	MOUSE_LEFT_DOWN = 0u,
+    MOUSE_MOVE,
     MOUSE_WHEEL,
     SIZE
 };

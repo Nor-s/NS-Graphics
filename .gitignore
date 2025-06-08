@@ -2,3 +2,5 @@
 builddir/
 *.log
 .DS_Store
+
+resources/

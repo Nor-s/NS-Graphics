@@ -2,9 +2,12 @@
 #include <imgui.h>
 
 #include "tvg.h"
+#include "scene/tvgexScene.h"
 
 namespace tvgex
 {
+
+using Examples = std::vector<std::unique_ptr<example::Example>>;
 
 ImguiTVGWindow::ImguiTVGWindow(TVG* app) : app_(app)
 {
@@ -19,21 +22,21 @@ void ImguiTVGWindow::draw()
 		if (app_)
 		{
 			int beforeItem = itemCurrent;
-			const TVG::Examples& examples = app_->getExamples();
+			const Examples& examples = app_->getMainScene()->getExamples();
 			ImGui::Combo(
 				"examples", &itemCurrent,
-				[](void* data, int n) { return ((const TVG::Examples*) data)->at(n)->toString().c_str(); },
+				[](void* data, int n) { return ((const Examples*) data)->at(n)->toString().c_str(); },
 				(void*) (&examples), examples.size());
 			if (beforeItem != itemCurrent)
 			{
-				app_->setExample(itemCurrent);
+				app_->getMainScene()->setExample(itemCurrent);
 			}
 		}
 		ImGui::Separator();
-		app_->drawExampleUIWidgets();
+		app_->getMainScene()->drawExampleUIWidgets();
 	}
 	ImGui::End();
-	app_->drawExampleUIWindows();
+	app_->getMainScene()->drawExampleUIWindows();
 }
 
 }	 // namespace tvgex
