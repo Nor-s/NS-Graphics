@@ -265,49 +265,46 @@ public:
 public:
 	void moveStartCamera(const ns::InputValue& value)
 	{
+		startMousePos_ = value.get<ns::Vec2>();
 		beforeMousePos_ = value.get<ns::Vec2>();
 		beforeCameraPos_ = camera_.getTransform().position; 
-		NS_LOG("start camera, x {}, y {}", beforeMousePos_.x, beforeMousePos_.y);
+		rotY_ = ns::Mat4();
+		NS_LOG("start camera, x {}, y {}", startMousePos_.x, startMousePos_.y);
 	}
 	void moveCamera(const ns::InputValue& value)
 	{
-		// camera Pos -  camera Target 
 		auto currentMousePos = value.get<ns::Vec2>();
-		auto delta =  currentMousePos - beforeMousePos_;
-		// beforeMousePos_ = currentMousePos;
-		delta.x*= -cameraSpeed_;
-		delta.y*= cameraSpeed_;
+		auto delta =  currentMousePos - startMousePos_;
+		auto cacheDeltaY = currentMousePos.y - beforeMousePos_.y;
+		beforeMousePos_ = currentMousePos;
+
+		// TODO: delta time and speed
+		delta.x*= -0.005f;
+		delta.y*= -0.005f;
 
 		auto at = camera_.getTarget();
 		auto up = camera_.getUp();
 		auto eye = beforeCameraPos_;
 		auto relCameraPos = eye - at;
+
 		auto forwardDir = ns::normalize(relCameraPos);
 		auto rightDir = ns::normalize(ns::cross(up, forwardDir));
 		auto upDir = ns::normalize(ns::cross(forwardDir, rightDir));
-		auto len = ns::length2(relCameraPos);
 
-		auto nextRelPos = relCameraPos + upDir*delta.y + rightDir * delta.x;
+		auto rotY = ns::rotate(ns::Mat4(), rightDir, delta.y);
+		auto rotX = ns::rotateY(ns::Mat4(), delta.x);
+		auto nextPos = rotY * ns::Vec4(beforeCameraPos_, 1.0f);
 
-		auto targetDir = ns::normalize(nextRelPos);
-		auto theta = acos(targetDir*forwardDir);
-
-		auto axis = ns::cross(forwardDir, targetDir);
-		if(ns::length2(axis) < 0.001f)
+		auto nextDot = static_cast<ns::Vec3>(ns::normalize(nextPos)) * ns::Vec3(0.0f, 1.0f, 0.0f);
+		if(abs(nextDot) > 0.95f)
 		{
-			return;
+			startMousePos_.y += cacheDeltaY;
+			camera_.getMutableTransform().position =  rotX * rotY_ * ns::Vec4(beforeCameraPos_, 1.0f);
+		 	return;
 		}
-		axis = ns::normalize(axis);
+		rotY_ = rotY;
 
-		auto rot = ns::rotate(ns::Mat4(), axis, theta);
-		auto nextRelP = static_cast<ns::Vec3>(rot*ns::Vec4(relCameraPos, 1.0f));
-		auto nextDot = ns::normalize(nextRelP) * up;
-		if(abs(nextDot) > 0.97f)
-		{
-			return;
-		}
-
-		camera_.getMutableTransform().position = nextRelP + at;
+		camera_.getMutableTransform().position =   rotX * rotY * ns::Vec4(beforeCameraPos_, 1.0f);
 
 		NS_LOG("move camera, x {}, y {}", delta.x, delta.y);
 	}
@@ -350,9 +347,12 @@ private:
 
 	// for camera
 	ns::CameraEntity camera_;
+	ns::Vec2 startMousePos_;
 	ns::Vec2 beforeMousePos_;
 	ns::Vec3 beforeCameraPos_;
-	float cameraSpeed_ = 1.0f;
+	ns::Mat4 rotY_;
+	ns::Mat4 rotX_;
+	float cameraSpeed_ = 0.0001f;
 };
 
 #endif
