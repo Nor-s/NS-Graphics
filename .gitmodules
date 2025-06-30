@@ -7,3 +7,9 @@
 [submodule "subprojects/imgui/textEditor"]
 	path = subprojects/imgui/textEditor
 	url = https://github.com/Nor-s/ImGuiColorTextEdit.git
+[submodule "subprojects/slang"]
+	path = subprojects/slang
+	url = https://github.com/Nor-s/slang.git
+[submodule "subprojects/entt"]
+	path = subprojects/entt
+	url = https://github.com/Nor-s/entt.git
