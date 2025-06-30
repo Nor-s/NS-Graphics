@@ -7,6 +7,8 @@
 #include <editor/imgui/imguiSceneWindow.h>
 #include <editor/imgui/imguiTextEditor.h>
 
+#include "Scene/mainScene.h"
+
 using namespace ns::editor;
 
 namespace vst
@@ -14,7 +16,7 @@ namespace vst
 
 void VST::initEnd()
 {
-	sceneList_.push_back(std::make_unique<ns::Scene>());
+	sceneList_.push_back(std::make_unique<MainScene>());
 }
 
 void VST::addImguiModule()

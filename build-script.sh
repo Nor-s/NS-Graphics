@@ -1,3 +1,3 @@
-meson setup builddir --buildtype=debug --default-library=static  -Doptimization=1
+meson setup builddir --buildtype=debug 
 
 meson compile -C builddir
