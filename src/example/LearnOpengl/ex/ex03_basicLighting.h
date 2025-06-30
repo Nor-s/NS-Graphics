@@ -2,6 +2,8 @@
 #define _LEARN_GL_EX_03_BASIC_LIGHTING_H_
 
 #include "example.h"
+#include <core/entity/component/components.h>
+#include <core/scene/nsScene.h>
 /**
  * 
 https://learnopengl.com/Lighting/Basic-Lighting
@@ -146,12 +148,18 @@ public:
 		lightObject_.transform.position = ns::Vec3{cubeCount_*1.5f, 0.0f, 0.0f};
 
 		// set camera
-		camera_.setRes(res);
-		camera_.setOrthoFactor({(float) res.width/80, (float) res.height/80});
-		camera_.setPosition({100, 100, 100});
-		camera_.setTarget({0.0, 0.0, 0.0});
-		camera_.setFov(ns::math::ToRadian(45.0f));
-		camera_.setPerspective();
+		cameraEntity_ = ns::Scene::CreateEntity(&scene_, "camera");
+		auto& cameraComponent = cameraEntity_->addComponent<ns::CameraComponent>();
+
+		camera_	= &cameraComponent.camera;
+		cameraTransform_ = &camera_->transform;
+		
+		cameraTransform_->position = {100, 100, 100};
+		camera_->setRes(res);
+		camera_->setOrthoFactor({(float) res.width/80, (float) res.height/80});
+		camera_->setTarget({0.0, 0.0, 0.0});
+		camera_->setFov(ns::math::ToRadian(45.0f));
+		camera_->setPerspective();
 
 		// input controller
 		inputController_ = std::make_unique<ns::InputController>();
@@ -176,15 +184,14 @@ public:
 	{
 		basicLightShader_.use();
 		auto lightColor = ns::Vec3{1.0f, 1.0f, 1.0f};
-
 		{
 			object_.cube->getBuffer()->bind();
 			basicLightShader_.setVec3("lightColor", lightColor);
 			basicLightShader_.setVec3("objectColor", ns::Vec3{1.0f, 0.5f, 0.31f});
-			basicLightShader_.setMat4("view", camera_.getView());
-			basicLightShader_.setMat4("proj", camera_.getProj());
+			basicLightShader_.setMat4("view", camera_->getView());
+			basicLightShader_.setMat4("proj", camera_->getProj());
 			basicLightShader_.setVec3("lightPos", lightObject_.transform.position);
-			basicLightShader_.setVec3("viewerPos", camera_.getTransform().position);
+			basicLightShader_.setVec3("viewerPos", cameraTransform_->position);
 
 			auto before = object_.transform.position;
 
@@ -209,8 +216,8 @@ public:
 			lightObject_.cube->getBuffer()->bind();
 			lightObjectShader_.setVec3("lightColor", lightColor);
 			lightObjectShader_.setMat4("transform", lightObject_.transform.get());
-			lightObjectShader_.setMat4("view", camera_.getView());
-			lightObjectShader_.setMat4("proj", camera_.getProj());
+			lightObjectShader_.setMat4("view", camera_->getView());
+			lightObjectShader_.setMat4("proj", camera_->getProj());
 
 			glDrawElements(GL_TRIANGLES, lightObject_.cube->getIndexSize(), GL_UNSIGNED_INT, 0);
 
@@ -223,7 +230,6 @@ public:
 	void drawUIWidgets()
 	{
 		using namespace ns::editor;
-
 		ImGui::Text("object");
 		ImGuiEx::DragPropertyXYZ("scale", object_.transform.scaleXYZ.value, 0.1f, 0.1f, 3.0f);
 		ImGuiEx::DragPropertyXYZ("translate", object_.transform.position.value, 0.01f, -100.0f, 100.0f);
@@ -234,12 +240,12 @@ public:
 		ImGuiEx::DragPropertyXYZ("light object", lightObject_.transform.position.value, 0.01f, -100.0f, 100.0f);
 
 		// camera
-		ImGuiEx::DragPropertyXYZ("camera pos", camera_.getMutableTransform().position.value, 1.0f, -400.0f, 400.0f);
-		ImGuiEx::DragPropertyXYZ("target pos", camera_.getMutableTarget().value, 0.1f, -10.0f, 10.0f);
+		ImGuiEx::DragPropertyXYZ("camera pos", cameraTransform_->position.value, 1.0f, -400.0f, 400.0f);
+		ImGuiEx::DragPropertyXYZ("target pos", camera_->getMutableTarget().value, 0.1f, -10.0f, 10.0f);
 
 		// ortho camera
 		auto windowRes = App::GetAppContext().res;
-		auto ortho = camera_.getOrthoFactor();
+		auto ortho = camera_->getOrthoFactor();
 
 		ImGui::Text("window width: %d, window height: %d", windowRes.width, windowRes.height);
 
@@ -249,8 +255,8 @@ public:
 		float f = windowRes.width/ortho.x;
 		ImGui::DragFloat("ortho factor", &f, 1.0f, 1.0f, windowRes.width);
 
-		camera_.setOrthoFactor(ortho);
-		camera_.setOrthoFactor({(float) windowRes.width/f, (float) windowRes.height/f});
+		camera_->setOrthoFactor(ortho);
+		camera_->setOrthoFactor({(float) windowRes.width/f, (float) windowRes.height/f});
 
 		if(ImGui::IsWindowFocused())
 		{
@@ -267,12 +273,12 @@ public:
 	{
 		startMousePos_ = value.get<ns::Vec2>();
 		beforeMousePos_ = value.get<ns::Vec2>();
-		beforeCameraPos_ = camera_.getTransform().position; 
+		beforeCameraPos_ = cameraTransform_->position; 
 		rotY_ = ns::Mat4();
 		NS_LOG("start camera, x {}, y {}", startMousePos_.x, startMousePos_.y);
 	}
 	void moveCamera(const ns::InputValue& value)
-	{
+	{		
 		auto currentMousePos = value.get<ns::Vec2>();
 		auto delta =  currentMousePos - startMousePos_;
 		auto cacheDeltaY = currentMousePos.y - beforeMousePos_.y;
@@ -282,8 +288,8 @@ public:
 		delta.x*= -0.005f;
 		delta.y*= -0.005f;
 
-		auto at = camera_.getTarget();
-		auto up = camera_.getUp();
+		auto at = camera_->getTarget();
+		auto up = camera_->getUp();
 		auto eye = beforeCameraPos_;
 		auto relCameraPos = eye - at;
 
@@ -299,23 +305,24 @@ public:
 		if(abs(nextDot) > 0.95f)
 		{
 			startMousePos_.y += cacheDeltaY;
-			camera_.getMutableTransform().position =  rotX * rotY_ * ns::Vec4(beforeCameraPos_, 1.0f);
+			cameraTransform_->position =  rotX * rotY_ * ns::Vec4(beforeCameraPos_, 1.0f);
 		 	return;
 		}
 		rotY_ = rotY;
 
-		camera_.getMutableTransform().position =   rotX * rotY * ns::Vec4(beforeCameraPos_, 1.0f);
+		cameraTransform_->position =   rotX * rotY * ns::Vec4(beforeCameraPos_, 1.0f);
 
 		NS_LOG("move camera, x {}, y {}", delta.x, delta.y);
 	}
 	void moveWheel(const ns::InputValue& value)
 	{
+		auto currentMousePos = value.get<ns::Vec2>();
 		float speed = 1.0f;
 		float x = value.get<float>();
 
-		auto at = camera_.getTarget();
-		auto up = camera_.getUp();
-		auto eye = camera_.getTransform().position;
+		auto at = camera_->getTarget();
+		auto up = camera_->getUp();
+		auto eye = cameraTransform_->position;
 		auto relCameraPos = eye - at;
 		auto forwardDir = ns::normalize(relCameraPos);
 
@@ -323,7 +330,7 @@ public:
 
 		if(ns::length2(next) > 30.0f)
 		{
-			camera_.getMutableTransform().position = next + at;
+			cameraTransform_->position = next + at;
 		}
 
 		NS_LOG("move wheel, x {}", x);
@@ -346,7 +353,10 @@ private:
 	ExEntity lightObject_;
 
 	// for camera
-	ns::CameraEntity camera_;
+	ns::Scene scene_{};
+	std::unique_ptr<ns::Entity> cameraEntity_;
+	ns::Camera* camera_;
+	ns::Transform* cameraTransform_;
 	ns::Vec2 startMousePos_;
 	ns::Vec2 beforeMousePos_;
 	ns::Vec3 beforeCameraPos_;

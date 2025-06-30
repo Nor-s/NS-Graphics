@@ -8,6 +8,7 @@
 #include <core/gpu/gl/glBuffer.h>
 #include <common/common.h>
 #include <editor/app.h>
+#include <imgui.h>
 #include <editor/imgui/imguiComponents.h>
 
 #include <nengine.h>

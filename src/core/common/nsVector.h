@@ -130,6 +130,10 @@ struct Vector4
 	{
 		return Vector3<T>{x, y, z};
 	}
+	operator const Vector3<T>() const
+	{
+		return Vector3<T>{x, y, z};
+	}
 };
 
 using Vec2 = Vector2<float>;

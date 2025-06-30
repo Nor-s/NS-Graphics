@@ -10,6 +10,9 @@ imgui_dep = cmake.subproject('imgui').dependency('imgui')
 lua_proj = subproject('lua')
 lua_dep = lua_proj.get_variable('lua_dep')
 
+entt_proj = cmake.subproject('entt')
+entt_dep = entt_proj.dependency('EnTT')
+
 # Set GL
 gl_dep = declare_dependency(link_args: ['-framework', 'OpenGL'])
 
@@ -18,6 +21,7 @@ dep_list =[
     sdl2_dep,
     gl_dep,
     imgui_dep,
+    entt_dep,
     lua_dep,
 ]
 
@@ -28,7 +32,11 @@ nsgraphics_src =[
 'src/core/common/nsTransform.cpp',
 
 'src/core/scene/nsScene.cpp',
+'src/core/entity/userEntity.cpp',
+'src/core/entity/nsEntity.cpp',
+
 'src/core/gpu/gl/glRenderTarget.cpp',
+'src/core/gpu/gl/glRenderer.cpp',
 'src/core/gpu/gl/glShader.cpp',
 'src/core/gpu/gl/glGeometry.cpp',
 'src/core/gpu/gl/glBuffer.cpp',

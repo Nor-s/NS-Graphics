@@ -14,6 +14,7 @@ enum class GpuBufferTarget : GLuint
 enum class GpuBufferUsage : GLuint 
 {
 	STATIC = GL_STATIC_DRAW,
+    DYNAMIC= GL_DYNAMIC_DRAW,
 };
 
 // todo: add noncopyable, move functions 

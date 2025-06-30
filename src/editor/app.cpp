@@ -46,6 +46,7 @@ void App::SetSceneFocus(int sceneId, bool bIsFocus)
 	{
 		return;
 	}
+	SetCurrentInputController(g_app->sceneList_[sceneId]->getInputController());
 }
 
 void App::initDefaultInputController()
