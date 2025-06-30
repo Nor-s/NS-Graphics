@@ -95,6 +95,10 @@ public:
             }
         }
     }
+    size_t size() const
+    {
+        return inputActions_.size();
+    }
 
 private:
 	std::unordered_map<InputType, std::vector<InputActionBinding*>> inputActions_;

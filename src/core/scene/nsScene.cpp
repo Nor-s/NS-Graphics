@@ -1,8 +1,19 @@
 #include "nsScene.h"
 #include "../gpu/gpu.h"
+#include "../input/inputController.h"
+#include "../entity/nsEntity.h"
+#include "../entity/userEntity.h"
 
 namespace ns
 {
+
+std::unique_ptr<Entity> Scene::CreateEntity(Scene* scene, std::string_view name)
+{
+    std::unique_ptr<Entity> entity(new Entity(scene));
+    entity->addComponent<TransformComponent>();
+    entity->addComponent<TagComponent>(name.empty() ? "Entity" : name);
+    return entity;
+}
 
 Scene::Scene()
 {
@@ -11,66 +22,59 @@ Scene::~Scene() = default;
 
 void Scene::init(const Resolution& res)
 {
-	sceneRenderTarget_.reset();
-    sceneRenderTarget_ = ns::GlRenderTarget::gen(
-		ns::GlRenderTarget::Spec{
-			.colorFormat = {ns::ColorFormat::RGBA8},
-			.depthFormat = ns::DepthFormat::DEPTH24_STENCIL8,
-			.resolution = res
-		}
-	);
+	glRenderer_.reset();
+	glRenderer_ = std::make_unique<GlRenderer>();
+	glRenderer_->onResize(res);
+
+	if (user_)
+	{
+		// inputController_ = std::make_unique<InputController>();
+		// user_->setupInputController(inputController_.get());
+		// if (inputController_->size() == 0)
+		// {
+			// inputController_.reset();
+		// }
+	}
+	else
+	{
+		// default user entity
+		// user_ = std::make_unique<UserEntity>();
+	}
+	// mainCamera_ = &user_->getComponent<CameraComponent>();
 }
 
 void Scene::resize(const Resolution& res)
 {
-  sceneRenderTarget_.reset();
-  sceneRenderTarget_ = ns::GlRenderTarget::gen(
-		ns::GlRenderTarget::Spec{
-			.colorFormat = {ns::ColorFormat::RGBA8},
-			.depthFormat = ns::DepthFormat::DEPTH24_STENCIL8,
-			.resolution = res
-		}
-	);
+	glRenderer_->onResize(res);
 }
 
 void Scene::onUpdate()
 {
-    for(auto& entity: entities_)
-    {
-        entity->onUpdate();
-    }
 }
 
 void Scene::onRender()
 {
-	GLCHECK(glBindFramebuffer(GL_FRAMEBUFFER, sceneRenderTarget_->getFbo()));
-	auto rect = sceneRenderTarget_->getViewport();
-	GLCHECK(glViewport(rect.x, rect.y, rect.w, rect.h));
-	GLCHECK(glClearColor(1.0f, 1.0, 0, 1.0f));
-	GLCHECK(glClear(GL_COLOR_BUFFER_BIT));
-
-    for(auto& entity: entities_)
-    {
-        entity->onRender();
-    }
-    draw();
-
-	GLCHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+	glRenderer_->onRender(this);
 }
 
-int Scene::getRenderId() const
+uint32_t Scene::getRenderId()
 {
-	return sceneRenderTarget_->getFbo();
+	return glRenderer_->getRenderTargetId();
 }
 
 uint64_t Scene::getSceneImage()
 {
-	return sceneRenderTarget_->getColorTexture();
+	return glRenderer_->getColorTexture();
 }
 
 Resolution Scene::getResolution()
 {
-    return sceneRenderTarget_->getresolution();
+	return glRenderer_->getResolution();
+}
+
+InputController* Scene::getInputController()
+{
+	return r_inputController_;
 }
 
 }	 // namespace ns

@@ -32,6 +32,7 @@ public:
 		auto* glCanvas = tvg::GlCanvas::gen();
 		canvas_ = glCanvas;
 
+
 		examples_.emplace_back(std::make_unique<example::EX03_Region>());
 		examples_.emplace_back(std::make_unique<example::EX02_Update>());
 		examples_.emplace_back(std::make_unique<example::EX01_Scene>());
@@ -76,6 +77,7 @@ public:
 			NS_ERROR("SET_EXAMPLE");
 		}
 		NS_INFO("ok SET_EXAMPLE");
+		r_inputController_ = examples_[currentExample_]->getInputController();
 	}
 
 	void drawExampleUIWidgets()

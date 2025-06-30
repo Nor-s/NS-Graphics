@@ -10,7 +10,7 @@ class GlRenderTask
 public:
     GlRenderTask(GlShader* shader): shader_(shader){}
 
-    void run();
+    void run(){}
 
 private:
     GlShader* shader_;

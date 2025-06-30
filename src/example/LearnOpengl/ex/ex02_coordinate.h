@@ -45,7 +45,7 @@ public:
 		cube_.cube = ns::GlGeometry::genCube();
 		camera_.setRes(res);
 		camera_.setOrthoFactor({(float) res.width, (float) res.height});
-		camera_.setPosition({0, 0, 5});
+		camera_.transform.position = {0, 0, 5};
 		camera_.setTarget({0.0, 0.0, 0.0});
 	}
 
@@ -75,7 +75,7 @@ public:
 		cube_.transform.radianXYZ.z = angle_ * 3.141592f / 180.0f;
 
 		// camera
-		ImGuiEx::DragPropertyXYZ("camera pos", camera_.getMutableTransform().position.value, 0.1f, -10.0f, 10.0f);
+		ImGuiEx::DragPropertyXYZ("camera pos", camera_.transform.position.value, 0.1f, -10.0f, 10.0f);
 		ImGuiEx::DragPropertyXYZ("target pos", camera_.getMutableTarget().value, 0.1f, -10.0f, 10.0f);
 
 		using namespace ns::editor;
@@ -89,7 +89,7 @@ public:
 		camera_.setOrthoFactor(ortho);
 
 		ImGui::Checkbox("Is Ortho", &bIsOrtho_);
-		camera_.setMode(bIsOrtho_ ? ns::CameraEntity::Mode::OrthoRH : ns::CameraEntity::Mode::PerspectRH);
+		camera_.setMode(bIsOrtho_ ? ns::CameraMode::OrthoRH : ns::CameraMode::PerspectRH);
 
 		ImGui::DragFloat("fov", &fov_, 1.0f, 0.0f, 360.f);
 		camera_.setFov(fov_ *(M_PI/180.0f));
@@ -101,7 +101,7 @@ private:
 	ns::GlShader shader_{};
 	float angle_{};
 	ExEntity cube_;
-	ns::CameraEntity camera_;
+	ns::Camera camera_;
 	bool bIsOrtho_ = false;
 	float fov_=45.0f;
 };

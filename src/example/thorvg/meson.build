@@ -4,12 +4,12 @@ tvgex_src = [
     './imguiTvgWindow.cpp',
 ]
 
-tvg_proj = subproject('thorvg', default_options:['engines=sw,gl', 'default_library=shared'])
+tvg_proj = subproject('thorvg', default_options:['engines=sw,gl', 'default_library=shared', 'loaders=all' ])
 tvg_dep = tvg_proj.get_variable('thorvg_dep')
 tvg_lib = tvg_proj.get_variable('thorvg_lib')
 
 # thorvg_dep, 
-tvgex_dep = [spdlog_dep, imgui_dep, tvg_dep]
+tvgex_dep = [spdlog_dep, imgui_dep, tvg_dep, entt_dep]
 
 # Define Exe
 executable('tvg', 
