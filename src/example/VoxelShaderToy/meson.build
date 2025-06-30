@@ -1,7 +1,8 @@
 
 vst_src = [
     './main.cpp',
-    './VST.cpp'
+    './VST.cpp',
+    './Scene/mainScene.cpp'
 ]
 
 # Define Exe
