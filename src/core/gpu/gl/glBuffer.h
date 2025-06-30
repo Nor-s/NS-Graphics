@@ -53,21 +53,12 @@ private:
 	GLuint id_;
 };
 
-struct GlVertexLayout
-{
-    uint32_t index;
-    uint32_t size;
-    uint32_t stride;
-    size_t   offset;
-};
-
 // todo: add noncopyable, move functions 
 class GlMeshBuffer
 {
 public:
     using VertexBuffer = GlBuffer<GpuBufferTarget::ARRAY_BUFFER, GpuBufferUsage::STATIC>;
     using IndexBuffer = GlBuffer<GpuBufferTarget::ELEMENT_ARRAY_BUFFER, GpuBufferUsage::STATIC>;
-    using Layouts = std::vector<GlVertexLayout>;
 
 public:
     GlMeshBuffer();

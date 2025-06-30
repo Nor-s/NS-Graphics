@@ -4,6 +4,7 @@
 #include <memory>
 #include "core/common/nsTransform.h"
 #include "camera.h"
+#include "core/gpu/geometry.h"
 
 namespace ns
 {
@@ -25,7 +26,7 @@ struct TransformComponent
 
 struct GeometryComponent
 {
-	std::shared_ptr<GlGeometry> geometry = nullptr;
+	std::unique_ptr<Geometry> geometry;
 };
 
 struct CameraComponent

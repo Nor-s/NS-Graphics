@@ -15,7 +15,7 @@
 
 struct ExEntity
 {
-	std::unique_ptr<ns::GlGeometry> cube = nullptr;
+	std::unique_ptr<ns::Geometry> cube = nullptr;
 	ns::Transform transform;
 };
 

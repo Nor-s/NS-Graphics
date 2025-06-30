@@ -43,9 +43,8 @@ public:
 		geoInfo_.index = {0, 1, 2};
 		// x,y,z
 		uint32_t stride = 3 * sizeof(float);
-		geometry_.init(geoInfo_, {ns::GlVertexLayout{0, 3, stride, 0}});
-
-		rectangle_ = ns::GlGeometry::genRectangle();
+		geometry_.init(geoInfo_, {ns::VertexLayout{0, 3, stride, 0}});
+		rectangle_.reset(static_cast<ns::GlGeometry*>(ns::Geometry::CreateRectangle().release()));
 	}
 	bool update(double deltaTime)
 	{

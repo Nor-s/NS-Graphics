@@ -42,7 +42,7 @@ public:
 		using namespace ns::editor;
 
 		auto res = App::GetAppContext().res;
-		cube_.cube = ns::GlGeometry::genCube();
+		cube_.cube = ns::Geometry::CreateCube();
 		camera_.setRes(res);
 		camera_.setOrthoFactor({(float) res.width, (float) res.height});
 		camera_.transform.position = {0, 0, 5};
@@ -52,16 +52,16 @@ public:
 	bool update(double deltaTime)
 	{
 		shader_.use();
-
+		auto* geometry = static_cast<ns::GlGeometry*>(cube_.cube.get());
 		{
-			cube_.cube->getBuffer()->bind();
+			geometry->getBuffer()->bind();
 			shader_.setVec4("color", ns::Vec4{0.0f, 4.0f, 1.0f, 1.0f});
 			shader_.setMat4("transform", cube_.transform.get());
 			shader_.setMat4("view", camera_.getView());
 			shader_.setMat4("proj", camera_.getProj());
 
 			glDrawElements(GL_TRIANGLES, cube_.cube->getIndexSize(), GL_UNSIGNED_INT, 0);
-			cube_.cube->getBuffer()->unbind();
+			geometry->getBuffer()->unbind();
 		}
 
 		return true;

@@ -1,9 +1,13 @@
 #ifndef _LEARN_GL_EX_03_BASIC_LIGHTING_H_
 #define _LEARN_GL_EX_03_BASIC_LIGHTING_H_
 
+#include <core/gpu/gl/glGeometry.h>
 #include "example.h"
 #include <core/entity/component/components.h>
 #include <core/scene/nsScene.h>
+
+#define GLGEOMETRY_CAST(geo) static_cast<ns::GlGeometry*>(geo.get())
+
 /**
  * 
 https://learnopengl.com/Lighting/Basic-Lighting
@@ -139,10 +143,10 @@ public:
 		cubeCount_ = 10;
 
 		// set cube object
-		object_.cube = ns::GlGeometry::genCubeWithNormal();
+		object_.cube = ns::Geometry::CreateCubeWithNormal();
 		object_.transform.scaleXYZ = ns::Vec3{0.4f, 0.4f, 0.4f};
 
-		lightObject_.cube = ns::GlGeometry::genCube();
+		lightObject_.cube = ns::Geometry::CreateCube();
 		float lightSize = cubeCount_*0.1f;
 		lightObject_.transform.scaleXYZ = ns::Vec3{lightSize, lightSize, lightSize};
 		lightObject_.transform.position = ns::Vec3{cubeCount_*1.5f, 0.0f, 0.0f};
@@ -161,7 +165,7 @@ public:
 		camera_->setFov(ns::math::ToRadian(45.0f));
 		camera_->setPerspective();
 
-		// input controller
+			// input controller
 		inputController_ = std::make_unique<ns::InputController>();
 		inputController_->bindAction(
 			ns::InputAction(ns::InputType::MOUSE_LEFT_DOWN),
@@ -185,7 +189,7 @@ public:
 		basicLightShader_.use();
 		auto lightColor = ns::Vec3{1.0f, 1.0f, 1.0f};
 		{
-			object_.cube->getBuffer()->bind();
+			GLGEOMETRY_CAST(object_.cube)->getBuffer()->bind();
 			basicLightShader_.setVec3("lightColor", lightColor);
 			basicLightShader_.setVec3("objectColor", ns::Vec3{1.0f, 0.5f, 0.31f});
 			basicLightShader_.setMat4("view", camera_->getView());
@@ -208,12 +212,12 @@ public:
 				}
 			}
 			object_.transform.position = before;
-			object_.cube->getBuffer()->unbind();
+			GLGEOMETRY_CAST(object_.cube)->getBuffer()->unbind();
 		}
 
 		lightObjectShader_.use();
 		{
-			lightObject_.cube->getBuffer()->bind();
+			GLGEOMETRY_CAST(lightObject_.cube)->getBuffer()->bind();
 			lightObjectShader_.setVec3("lightColor", lightColor);
 			lightObjectShader_.setMat4("transform", lightObject_.transform.get());
 			lightObjectShader_.setMat4("view", camera_->getView());
@@ -221,7 +225,7 @@ public:
 
 			glDrawElements(GL_TRIANGLES, lightObject_.cube->getIndexSize(), GL_UNSIGNED_INT, 0);
 
-			lightObject_.cube->getBuffer()->unbind();
+			GLGEOMETRY_CAST(lightObject_.cube)->getBuffer()->unbind();
 		}
 
 		return true;
@@ -248,6 +252,9 @@ public:
 		auto ortho = camera_->getOrthoFactor();
 
 		ImGui::Text("window width: %d, window height: %d", windowRes.width, windowRes.height);
+
+		ImGui::Checkbox("Is Ortho", &bIsOrtho_);
+		camera_->setMode(bIsOrtho_ ? ns::CameraMode::OrthoRH : ns::CameraMode::PerspectRH);
 
 		ImGui::DragFloat("ortho_factor_x", &ortho.x, 1.0f, 1.0f, 4000.0f);
 		ImGui::DragFloat("ortho_factor_y", &ortho.y, 1.0f, 1.0f, 4000.f);
@@ -362,6 +369,7 @@ private:
 	ns::Vec3 beforeCameraPos_;
 	ns::Mat4 rotY_;
 	ns::Mat4 rotX_;
+	bool bIsOrtho_ = false;
 	float cameraSpeed_ = 0.0001f;
 };
 

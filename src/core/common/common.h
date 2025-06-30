@@ -39,6 +39,16 @@ struct GeometryInfo
 	std::vector<uint32_t> index;
 };
 
+struct VertexLayout
+{
+    uint32_t index;
+    uint32_t size;
+    uint32_t stride;
+    size_t   offset;
+};
+
+using Layouts = std::vector<VertexLayout>;
+
 }	 // namespace ns
 
 #endif

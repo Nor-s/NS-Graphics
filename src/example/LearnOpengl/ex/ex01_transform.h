@@ -36,8 +36,7 @@ public:
         } 
         )";
 		shader_.init(vert_, frag_);
-
-		cube_ = ns::GlGeometry::genRectangle();
+		cube_.reset(static_cast<ns::GlGeometry*>(ns::Geometry::CreateRectangle().release()));
 	}
 	bool update(double deltaTime)
 	{

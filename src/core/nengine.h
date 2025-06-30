@@ -11,6 +11,7 @@
 #include "entity/nsEntity.h"
 #include "scene/nsScene.h"
 
+#include "gpu/geometry.h"
 
 #include "input/inputController.h"
 #include "input/inputAction.h"
