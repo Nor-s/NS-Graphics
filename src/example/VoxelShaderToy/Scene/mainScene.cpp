@@ -14,6 +14,8 @@ MainScene::MainScene()
 		box_->init(CreateEntity(this, "box"));
 		auto& geo = box_->addComponent<ns::GeometryComponent>();
 		geo.geometry = ns::Geometry::CreateCube();
+		box_->addComponent<ns::BasicLightMaterial>();
+		box_->getComponent<ns::TransformComponent>().transform.scaleXYZ = {40.0f, 40.0f, 40.0f};
 	}
 }
 

@@ -12,6 +12,8 @@ Entity Scene::CreateEntity(Scene* scene, std::string_view name)
 {
 	Entity entity(scene);
 	entity.addComponent<InitializeState>();
+	entity.addComponent<ActivateState>();
+	entity.addComponent<UpdateState>();
 	entity.addComponent<TransformComponent>();
 	entity.addComponent<NameComponent>(name.empty() ? "Entity" : name);
 
@@ -26,8 +28,6 @@ Scene::~Scene() = default;
 
 void Scene::init(const Resolution& res)
 {
-	initUserEntity();
-
 	glRenderer_.reset();
 	glRenderer_ = std::make_unique<GlRenderer>();
 	glRenderer_->onResize(res);
@@ -49,18 +49,18 @@ void Scene::init(const Resolution& res)
 		if (user_->hasComponent<CameraComponent>())
 		{
 			mainCamera_ = &(user_->getComponent<CameraComponent>());
+			mainCamera_->camera.setRes(res);
 		}
 	}
-}
-
-void Scene::initUserEntity()
-{
-	user_ = nullptr;
 }
 
 void Scene::resize(const Resolution& res)
 {
 	glRenderer_->onResize(res);
+	if(mainCamera_)
+	{
+		mainCamera_->camera.setRes(res);
+	}
 }
 
 void Scene::onUpdate()
@@ -76,8 +76,6 @@ void Scene::onUpdate()
 		[&](const entt::entity& entity, auto& statetate, auto& cb)
 		{
 			cb.callbackEvent->invoke();
-			registry_.emplace<ActivateState>(entity);
-			registry_.emplace<UpdateState>(entity);
 		});
 	registry_.clear<InitializeState>();
 
@@ -119,6 +117,15 @@ Resolution Scene::getResolution()
 InputController* Scene::getInputController()
 {
 	return r_inputController_;
+}
+
+const Camera* Scene::getMainCamera() const
+{
+	if(mainCamera_)
+	{
+		return &(mainCamera_->camera);
+	}
+	return nullptr;
 }
 
 }	 // namespace ns

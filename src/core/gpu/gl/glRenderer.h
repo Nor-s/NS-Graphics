@@ -4,6 +4,8 @@
 #include "glCommon.h"
 #include "glBuffer.h"
 
+#include <unordered_map>
+
 namespace ns
 {
 
@@ -11,16 +13,10 @@ class GlShader;
 class Scene;
 class GlRenderTarget;
 
-enum ShaderType : size_t
-{
-	BASIC_SHADER = 0,
-	SIZE
-};
-
 class GlRenderer
 {
-    using GlUniformBuffer = GlBuffer<GpuBufferTarget::UNIFORM_BUFFER, GpuBufferUsage::DYNAMIC>;
-	static std::vector<std::unique_ptr<GlShader>> g_shaders;
+    // using GlUniformBuffer = GlBuffer<GpuBufferTarget::UNIFORM_BUFFER, GpuBufferUsage::DYNAMIC>;
+	static std::unordered_map<const char*, std::unique_ptr<GlShader>> g_shaders;
 
 public:
 	GlRenderer();
@@ -38,7 +34,7 @@ private:
 
 private:
 	std::unique_ptr<GlRenderTarget> sceneRenderTarget_;
-	GlUniformBuffer cameraUniformBuffer_;
+	// GlUniformBuffer cameraUniformBuffer_;
 };
 
 }	 // namespace ns

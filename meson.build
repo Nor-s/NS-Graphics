@@ -41,6 +41,7 @@ nsgraphics_src =[
 'src/core/gpu/gl/glRenderTarget.cpp',
 'src/core/gpu/gl/glRenderer.cpp',
 'src/core/gpu/gl/glShader.cpp',
+'src/core/gpu/gl/glShaderSrc.cpp',
 'src/core/gpu/gl/glGeometry.cpp',
 'src/core/gpu/gl/glBuffer.cpp',
 

@@ -23,7 +23,6 @@ public:
 	Scene();
 	virtual ~Scene();
 	virtual void init(const Resolution& res);
-	virtual void initUserEntity();
 	virtual void resize(const Resolution& res);
 	virtual void draw() {};
 
@@ -34,6 +33,8 @@ public:
 	{
 		return registry_;
 	}
+	const Camera* getMainCamera() const;
+	
 
 	virtual void onUpdate();
 	virtual void onRender();
@@ -49,7 +50,7 @@ protected:
 private:
 	std::unique_ptr<InputController> inputController_;
 	std::unique_ptr<GlRenderer> glRenderer_;
-	const CameraComponent* mainCamera_ = nullptr;
+	CameraComponent* mainCamera_ = nullptr;
 };
 
 }	 // namespace ns

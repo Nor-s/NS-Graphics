@@ -4,6 +4,7 @@
 namespace ns
 {
 
+// entity state
 struct InitializeState
 {
     bool dummy;
@@ -24,7 +25,6 @@ struct DestroyState
 {
     bool dummy;
 };
-
 
 }	 // namespace ns
 

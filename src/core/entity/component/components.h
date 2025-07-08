@@ -7,6 +7,7 @@
 #include "core/gpu/geometry.h"
 #include "callbackComponent.h"
 #include "tags.h"
+#include "nsMaterial.h"
 
 namespace ns
 {
@@ -17,22 +18,22 @@ struct NameComponent
 	NameComponent(std::string_view name) : name(name)
 	{
 	}
-	std::string name;
+	std::string name{};
 };
 
 struct TransformComponent
 {
-	Transform transform;
+	Transform transform{};
 };
 
 struct GeometryComponent
 {
-	std::unique_ptr<Geometry> geometry;
+	std::unique_ptr<Geometry> geometry{};
 };
 
 struct CameraComponent
 {
-	Camera camera;
+	Camera camera{};
 };
 
 struct UpdateComponent

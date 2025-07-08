@@ -91,11 +91,11 @@ public:
 	{
 		setMode(CameraMode::OrthoRH);
 	}
-	ShaderCameraInterop getShaderCamera()
+	const ShaderCameraInterop getCameraInterop() const
 	{
 		return ShaderCameraInterop{.view = getView(),
 								   .proj = getProj(),
-								   .worldPosition = transform.position,
+								   .eyeWorldPosition = transform.position,
 								   .nearZ = nearZ_,
 								   .up = up_,
 								   .farZ = farZ_,
