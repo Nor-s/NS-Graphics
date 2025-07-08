@@ -17,17 +17,23 @@ class GlRenderer;
 class Scene
 {
 public:
-	static std::unique_ptr<Entity> CreateEntity(Scene* scene, std::string_view name);
+	static Entity CreateEntity(Scene* scene, std::string_view name);
 
 public:
 	Scene();
 	virtual ~Scene();
 	virtual void init(const Resolution& res);
+	virtual void initUserEntity();
 	virtual void resize(const Resolution& res);
 	virtual void draw() {};
+
 	uint64_t getSceneImage();
 	Resolution getResolution();
 	virtual InputController* getInputController();
+	entt::registry& getRegistry()
+	{
+		return registry_;
+	}
 
 	virtual void onUpdate();
 	virtual void onRender();
@@ -35,12 +41,13 @@ public:
 protected:
 	uint32_t getRenderId();
 
-    friend class Entity;
-    entt::registry registry_{};
+	friend class Entity;
+	entt::registry registry_{};
 	InputController* r_inputController_;
-	UserEntity* user_ = nullptr;
+	std::unique_ptr<UserEntity> user_;
 
 private:
+	std::unique_ptr<InputController> inputController_;
 	std::unique_ptr<GlRenderer> glRenderer_;
 	const CameraComponent* mainCamera_ = nullptr;
 };

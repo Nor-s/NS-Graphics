@@ -1,13 +1,7 @@
 #ifndef _NS_GRAPHICS_SCENE_ENTITY_USER_H_
 #define _NS_GRAPHICS_SCENE_ENTITY_USER_H_
 
-#include <core/entity/userEntity.h>
-
-namespace ns
-{
-struct InputValue;
-struct CameraComponent;
-}
+#include <nengine.h>
 
 namespace vst
 {
@@ -35,7 +29,8 @@ public:
 
 private:
 	// for camera
-	ns::CameraComponent* camera_;
+	ns::Camera* camera_;
+	ns::Transform* r_transform_ = nullptr;
     CameraControlData cameraControlData_;
 };
 }	 // namespace vst

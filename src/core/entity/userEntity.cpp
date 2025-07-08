@@ -5,17 +5,11 @@
 namespace ns
 {
 
-UserEntity::UserEntity(std::unique_ptr<Entity> entity)
-    :entity_(std::move(entity))
-{
-}
-
-UserEntity::~UserEntity()
-{
-}
+UserEntity::~UserEntity() = default;
 
 void UserEntity::setupInputController(InputController*)
 {
 }
+
 
 }

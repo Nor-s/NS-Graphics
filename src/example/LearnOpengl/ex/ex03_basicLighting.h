@@ -153,7 +153,7 @@ public:
 
 		// set camera
 		cameraEntity_ = ns::Scene::CreateEntity(&scene_, "camera");
-		auto& cameraComponent = cameraEntity_->addComponent<ns::CameraComponent>();
+		auto& cameraComponent = cameraEntity_.addComponent<ns::CameraComponent>();
 
 		camera_	= &cameraComponent.camera;
 		cameraTransform_ = &camera_->transform;
@@ -361,7 +361,7 @@ private:
 
 	// for camera
 	ns::Scene scene_{};
-	std::unique_ptr<ns::Entity> cameraEntity_;
+	ns::Entity cameraEntity_;
 	ns::Camera* camera_;
 	ns::Transform* cameraTransform_;
 	ns::Vec2 startMousePos_;

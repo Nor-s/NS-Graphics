@@ -7,6 +7,7 @@
 #include <editor/imgui/imguiSceneWindow.h>
 #include <editor/imgui/imguiTextEditor.h>
 
+#include "Scene/Entity/box.h"
 #include "Scene/mainScene.h"
 
 using namespace ns::editor;

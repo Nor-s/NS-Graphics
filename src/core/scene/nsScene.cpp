@@ -3,44 +3,59 @@
 #include "../input/inputController.h"
 #include "../entity/nsEntity.h"
 #include "../entity/userEntity.h"
+#include "../entity/component/components.h"
 
 namespace ns
 {
 
-std::unique_ptr<Entity> Scene::CreateEntity(Scene* scene, std::string_view name)
+Entity Scene::CreateEntity(Scene* scene, std::string_view name)
 {
-    std::unique_ptr<Entity> entity(new Entity(scene));
-    entity->addComponent<TransformComponent>();
-    entity->addComponent<TagComponent>(name.empty() ? "Entity" : name);
-    return entity;
+	Entity entity(scene);
+	entity.addComponent<InitializeState>();
+	entity.addComponent<TransformComponent>();
+	entity.addComponent<NameComponent>(name.empty() ? "Entity" : name);
+
+	return entity;
 }
 
 Scene::Scene()
 {
 }
+
 Scene::~Scene() = default;
 
 void Scene::init(const Resolution& res)
 {
+	initUserEntity();
+
 	glRenderer_.reset();
 	glRenderer_ = std::make_unique<GlRenderer>();
 	glRenderer_->onResize(res);
 
 	if (user_)
 	{
-		// inputController_ = std::make_unique<InputController>();
-		// user_->setupInputController(inputController_.get());
-		// if (inputController_->size() == 0)
-		// {
-			// inputController_.reset();
-		// }
+		user_->init(CreateEntity(this, "user"));
+		inputController_ = std::make_unique<InputController>();
+		user_->setupInputController(inputController_.get());
+		if (inputController_->size() == 0)
+		{
+			inputController_.reset();
+		}
+		else
+		{
+			r_inputController_ = inputController_.get();
+		}
+
+		if (user_->hasComponent<CameraComponent>())
+		{
+			mainCamera_ = &(user_->getComponent<CameraComponent>());
+		}
 	}
-	else
-	{
-		// default user entity
-		// user_ = std::make_unique<UserEntity>();
-	}
-	// mainCamera_ = &user_->getComponent<CameraComponent>();
+}
+
+void Scene::initUserEntity()
+{
+	user_ = nullptr;
 }
 
 void Scene::resize(const Resolution& res)
@@ -50,11 +65,40 @@ void Scene::resize(const Resolution& res)
 
 void Scene::onUpdate()
 {
+	// Adding/Removing components during iterations is safe
+	// - https://github.com/skypjack/entt/issues/98
+	// - https://github.com/skypjack/entt/issues/120
+
+	// todo: destroy, deactivate callback
+
+	// init callback
+	registry_.view<InitializeState, InitializeCallback>().each(
+		[&](const entt::entity& entity, auto& statetate, auto& cb)
+		{
+			cb.callbackEvent->invoke();
+			registry_.emplace<ActivateState>(entity);
+			registry_.emplace<UpdateState>(entity);
+		});
+	registry_.clear<InitializeState>();
+
+	registry_.view<ActivateState, ActivateCallback>().each(
+		[&](const entt::entity& entity, auto& statetate, auto& cb)
+		{
+			cb.callbackEvent->invoke();
+		});
+	registry_.clear<ActivateState>();
+
+	// updaate callback
+	registry_.view<UpdateState, UpdateCallback>().each(
+		[&](const entt::entity& entity, auto& state, auto& cb)
+		{
+			cb.callbackEvent->invoke();
+		});
 }
 
 void Scene::onRender()
 {
-	glRenderer_->onRender(this);
+	glRenderer_->render(this);
 }
 
 uint32_t Scene::getRenderId()

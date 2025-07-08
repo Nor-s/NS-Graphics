@@ -4,11 +4,15 @@
 #include "common/common.h"
 #include "common/nsTime.h"
 #include "common/logger.h"
+#include "common/nsVector.h"
+#include "common/nsTransform.h"
+#include "common/nsMat.h"
 
 #include "platform/platformEvent.h"
 
 #include "entity/component/components.h"
 #include "entity/nsEntity.h"
+#include "entity/userEntity.h"
 #include "scene/nsScene.h"
 
 #include "gpu/geometry.h"

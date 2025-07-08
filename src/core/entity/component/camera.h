@@ -91,20 +91,18 @@ public:
 	{
 		setMode(CameraMode::OrthoRH);
 	}
-    ShaderCameraInterop getShaderCamera()
-    {
-        return ShaderCameraInterop{
-            .view = getView(),
-            .proj = getProj(), 
-            .worldPosition =transform.position,
-            .nearZ = nearZ_,
-            .up = up_,
-            .farZ = farZ_,
-            .atWorldPosition = target_,
-            .fov = fovRadian_
-        };
-    }
-    Transform transform{};
+	ShaderCameraInterop getShaderCamera()
+	{
+		return ShaderCameraInterop{.view = getView(),
+								   .proj = getProj(),
+								   .worldPosition = transform.position,
+								   .nearZ = nearZ_,
+								   .up = up_,
+								   .farZ = farZ_,
+								   .atWorldPosition = target_,
+								   .fov = fovRadian_};
+	}
+	Transform transform{};
 
 private:
 	Vec3 target_{0.0f, 0.0f, 0.0f};

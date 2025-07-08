@@ -16,35 +16,33 @@ class Scene;
 class Entity
 {
 public:
-
+	Entity() = default;
+	Entity(Scene* scene);
 	virtual ~Entity() = default;
 
-    template <class T>
-    T &getComponent()
-    {
-        assert(hasComponent<T>());
+	template <class T>
+	T& getComponent()
+	{
+		assert(hasComponent<T>());
 		return r_scene_->registry_.get<T>(handle_);
-    }
+	}
 
-	template<typename T, typename... Args>
-    T &addComponent(Args&&... args)
-    {
-        assert(!hasComponent<T>());
+	template <typename T, typename... Args>
+	T& addComponent(Args&&... args)
+	{
+		assert(!hasComponent<T>());
 		return r_scene_->registry_.emplace<T>(handle_, std::forward<Args>(args)...);
-    }
+	}
 
-	template<typename T>
-    bool hasComponent() 
-    {
-        return r_scene_->registry_.try_get<T>(handle_) != nullptr; 
-    }
+	template <typename T>
+	bool hasComponent()
+	{
+		assert(handle_ != entt::null);
+		return r_scene_->registry_.try_get<T>(handle_) != nullptr;
+	}
 
-protected:
-    friend class Scene;
-    friend class UserEntity;
-	Entity(Scene* scene);
-	
-    entt::entity handle_{ entt::null };
+private:
+	entt::entity handle_{entt::null};
 	Scene* r_scene_{nullptr};
 };
 

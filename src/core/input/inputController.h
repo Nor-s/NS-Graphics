@@ -101,6 +101,7 @@ public:
     }
 
 private:
+    // TODO: delete input action binding
 	std::unordered_map<InputType, std::vector<InputActionBinding*>> inputActions_;
 };
 

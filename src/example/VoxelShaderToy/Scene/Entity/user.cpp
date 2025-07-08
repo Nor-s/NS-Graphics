@@ -1,7 +1,5 @@
 #include "user.h"
-#include <core/input/inputController.h>
-#include <core/input/inputAction.h>
-#include <core/entity/component/cameraComponent.h>
+
 
 namespace vst
 {
@@ -17,14 +15,15 @@ void User::setupInputController(ns::InputController* inputController)
 	inputController->bindAction(ns::InputAction(ns::InputType::MOUSE_WHEEL), ns::InputTrigger::Triggered, this,
 								&User::onMouseWheel);
 
-	camera_ = addComponent<ns::CameraComponent>();
+	camera_ =  &addComponent<ns::CameraComponent>().camera;
+	r_transform_ = &getComponent<ns::TransformComponent>().transform;
 }
 
 void User::onMoveDragStart(const ns::InputValue& value)
 {
 	cameraControlData_.startMousePos = value.get<ns::Vec2>();
 	cameraControlData_.beforeMousePos = value.get<ns::Vec2>();
-	cameraControlData_.beforeCameraPos = camera_->transform.position;
+	cameraControlData_.beforeCameraPos = r_transform_->position;
 	cameraControlData_.rotY = ns::Mat4();
 }
 

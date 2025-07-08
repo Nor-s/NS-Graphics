@@ -25,7 +25,7 @@ class GlRenderer
 public:
 	GlRenderer();
 
-	void onRender(Scene* scene);
+	void render(Scene* scene);
 	void onResize(const Resolution& res);	
 	uint32_t getRenderTargetId();
 	uint64_t getColorTexture();

@@ -2,7 +2,9 @@
 vst_src = [
     './main.cpp',
     './VST.cpp',
-    './Scene/mainScene.cpp'
+    './Scene/mainScene.cpp',
+    './Scene/Entity/user.cpp',
+    './Scene/Entity/box.cpp',
 ]
 
 # Define Exe

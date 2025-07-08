@@ -1,9 +1,20 @@
 #include "mainScene.h"
 #include "Entity/user.h"
-#include "Entity/cube.h"
+#include "Entity/box.h"
 
-vst::MainScene::MainScene()
+namespace vst
 {
-    // user_ = std::make_unique<User>();
-    // entities_.emplace_back(std::make_unique<Cube>());
+
+MainScene::MainScene()
+{
+	user_ = std::make_unique<User>();
+
+	box_ = std::make_unique<BoxEntity>();
+	{
+		box_->init(CreateEntity(this, "box"));
+		auto& geo = box_->addComponent<ns::GeometryComponent>();
+		geo.geometry = ns::Geometry::CreateCube();
+	}
 }
+
+}	 // namespace vst

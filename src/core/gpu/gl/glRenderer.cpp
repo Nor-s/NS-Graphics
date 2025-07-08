@@ -38,11 +38,16 @@ Resolution GlRenderer::getResolution() const
 	return Resolution();
 }
 
-void GlRenderer::onRender(Scene* scene)
+void GlRenderer::render(Scene* scene)
 {
 	bind();
 
 	scene->draw();
+
+	auto& registry = scene->getRegistry();
+
+	// registry.view<ActiveEntity, GeometryComponent, TransformComponent>();
+
 
 	unbind();
 }

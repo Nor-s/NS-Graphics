@@ -5,15 +5,16 @@
 #include "core/common/nsTransform.h"
 #include "camera.h"
 #include "core/gpu/geometry.h"
+#include "callbackComponent.h"
+#include "tags.h"
 
 namespace ns
 {
 
 class GlGeometry;
-
-struct TagComponent
+struct NameComponent
 {
-	TagComponent(std::string_view name) : name(name)
+	NameComponent(std::string_view name) : name(name)
 	{
 	}
 	std::string name;
@@ -32,6 +33,10 @@ struct GeometryComponent
 struct CameraComponent
 {
 	Camera camera;
+};
+
+struct UpdateComponent
+{
 };
 
 }	 // namespace ns

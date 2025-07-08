@@ -32,6 +32,7 @@ nsgraphics_src =[
 'src/core/common/nsTransform.cpp',
 
 'src/core/scene/nsScene.cpp',
+'src/core/entity/actorEntity.cpp',
 'src/core/entity/userEntity.cpp',
 'src/core/entity/nsEntity.cpp',
 
