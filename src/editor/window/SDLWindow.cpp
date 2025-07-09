@@ -76,6 +76,7 @@ void SDLWindow::processEvent(SystemIO& io)
 {
 	SDL_Event event;
 	bool& done = io.done;
+	bIsResize_ = false;
 
 	while (!done)
 	{
@@ -91,12 +92,18 @@ void SDLWindow::processEvent(SystemIO& io)
 			if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE &&
 				event.window.windowID == SDL_GetWindowID(handle_))
 				done = true;
-			
 
 			if (event.type == SDL_MOUSEMOTION)
 			{
 				io.mousePos.y =  event.motion.y;
 				io.mousePos.x =  event.motion.x;
+			}
+
+			if (event.window.event == SDL_WINDOWEVENT_RESIZED) 
+			{
+				appContext_.res.width = event.window.data1;
+				appContext_.res.height = event.window.data2;
+				bIsResize_ = true;
 			}
 		}
 		if (SDL_GetWindowFlags(handle_) & SDL_WINDOW_MINIMIZED)

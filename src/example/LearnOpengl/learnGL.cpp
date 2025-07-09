@@ -58,6 +58,11 @@ void LearnGL::drawExampleUIWindows()
 	examples_[currentExampleIndex_]->drawUIWindows();
 }
 
+void LearnGL::onWindowResize(const ns::Resolution& res)
+{
+	examples_[currentExampleIndex_]->onWindowResize(res);
+}
+
 void LearnGL::initDefaultInputController()
 {
 	defaultInputController_ = std::make_unique<ns::InputController>();

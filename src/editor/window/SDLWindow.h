@@ -10,6 +10,7 @@
 #include <core/platform/platformEvent.h>
 
 #include "../common/env.h"
+#include "SDLInputManager.h"
 
 namespace ns::editor
 {
@@ -30,6 +31,10 @@ public:
 	{
 		return context_;
 	}
+	const AppContext& getAppContext() const 
+	{
+		return appContext_;
+	}
 	void processEvent(SystemIO& io);
 	void predraw(SystemIO& io);
 	void draw(SystemIO& io);
@@ -37,6 +42,8 @@ public:
 
 	void addImguiModule(std::unique_ptr<IImguiModule> imguiModule);
 	void resetInputState();
+
+	bool isResize() {return bIsResize_;}
 
 private:
 	void initGL();
@@ -52,6 +59,9 @@ private:
 
 	// input
 	bool bIsMouseLeftHold_ = false;
+	SDLInputManager inputManager_;
+
+	bool bIsResize_ = true;
 };
 
 }	 // namespace ns::editor

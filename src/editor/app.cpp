@@ -100,8 +100,14 @@ void App::run()
 	while (!context.done)
 	{
 		preProcessEvent();
-		eventController_->processEvent();
 		sdlWindow_->processEvent(context);
+		if(sdlWindow_->isResize())
+		{
+			appContext_.res = sdlWindow_->getAppContext().res;
+			onWindowResize(appContext_.res);
+		}
+
+		eventController_->processEvent();
 
 		update();
 

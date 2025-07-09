@@ -44,7 +44,7 @@ public:
 		auto res = App::GetAppContext().res;
 		cube_.cube = ns::Geometry::CreateCube();
 		camera_.setRes(res);
-		camera_.setOrthoFactor({(float) res.width, (float) res.height});
+		camera_.setOrthoFactor(1.0f/res.width);
 		camera_.transform.position = {0, 0, 5};
 		camera_.setTarget({0.0, 0.0, 0.0});
 	}
@@ -83,8 +83,7 @@ public:
 		auto ortho = camera_.getOrthoFactor();
 
 		ImGui::Text("window width: %d, window height: %d", windowRes.width, windowRes.height);
-		ImGui::DragFloat("ortho_factor_x", &ortho.x, 1.0f, 1.0f, 4000.0f);
-		ImGui::DragFloat("ortho_factor_y", &ortho.y, 1.0f, 1.0f, 4000.f);
+		ImGui::DragFloat("ortho_factor", &ortho, 0.001f, 0.001f, 1.0f);
 
 		camera_.setOrthoFactor(ortho);
 
@@ -93,6 +92,10 @@ public:
 
 		ImGui::DragFloat("fov", &fov_, 1.0f, 0.0f, 360.f);
 		camera_.setFov(fov_ *(M_PI/180.0f));
+	}
+	void onWindowResize(const ns::Resolution& res) override 
+	{
+		camera_.setRes(res);
 	}
 
 private:

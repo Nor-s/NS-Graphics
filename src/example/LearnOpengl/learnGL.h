@@ -19,6 +19,8 @@ public:
 	void drawExampleUIWidgets();
 	void drawExampleUIWindows();
 
+	virtual void onWindowResize(const ns::Resolution& res) override final;
+
 protected:
 	virtual void initEnd() override final;
 	virtual void addImguiModule() override final;

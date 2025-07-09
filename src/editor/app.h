@@ -69,6 +69,8 @@ protected:
 	virtual void initEventController();
 	virtual void initScene();
 
+	virtual void onWindowResize(const ns::Resolution& res) {}
+
 private:
 	void update();
 

@@ -49,6 +49,7 @@ nsgraphics_src =[
 'src/editor/event/events.cpp',
 'src/editor/event/simpleEventQueue.cpp',
 'src/editor/window/SDLWindow.cpp',
+'src/editor/window/SDLInputManager.cpp',
 'src/editor/imgui/imguiLayer.cpp',
 'src/editor/imgui/imguiWindow.cpp',
 'src/editor/imgui/imguiTextEditor.cpp',

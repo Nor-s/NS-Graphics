@@ -160,7 +160,7 @@ public:
 		
 		cameraTransform_->position = {100, 100, 100};
 		camera_->setRes(res);
-		camera_->setOrthoFactor({(float) res.width/80, (float) res.height/80});
+		camera_->setOrthoFactor(0.1f);
 		camera_->setTarget({0.0, 0.0, 0.0});
 		camera_->setFov(ns::math::ToRadian(45.0f));
 		camera_->setPerspective();
@@ -176,6 +176,11 @@ public:
 			ns::InputAction(ns::InputType::MOUSE_LEFT_DOWN),
 			ns::InputTrigger::Triggered,this,
 			&Ex03_BasicLighting::moveCamera
+		);
+		inputController_->bindAction(
+			ns::InputAction(ns::InputType::MOUSE_LEFT_DOWN),
+			ns::InputTrigger::Ended,this,
+			&Ex03_BasicLighting::moveEndCamera
 		);
 		inputController_->bindAction(
 			ns::InputAction(ns::InputType::MOUSE_WHEEL),
@@ -256,20 +261,16 @@ public:
 		ImGui::Checkbox("Is Ortho", &bIsOrtho_);
 		camera_->setMode(bIsOrtho_ ? ns::CameraMode::OrthoRH : ns::CameraMode::PerspectRH);
 
-		ImGui::DragFloat("ortho_factor_x", &ortho.x, 1.0f, 1.0f, 4000.0f);
-		ImGui::DragFloat("ortho_factor_y", &ortho.y, 1.0f, 1.0f, 4000.f);
-
-		float f = windowRes.width/ortho.x;
-		ImGui::DragFloat("ortho factor", &f, 1.0f, 1.0f, windowRes.width);
+		ImGui::DragFloat("ortho_factor", &ortho, 0.001f, 0.001f, 1.0f);
 
 		camera_->setOrthoFactor(ortho);
-		camera_->setOrthoFactor({(float) windowRes.width/f, (float) windowRes.height/f});
 
 		if(ImGui::IsWindowFocused())
 		{
+			bIsDragStart_ = false;
 			App::SetCurrentInputController(nullptr);
 		}
-		else 
+		else
 		{
 			App::SetCurrentInputController(inputController_.get());
 		}
@@ -278,6 +279,7 @@ public:
 public:
 	void moveStartCamera(const ns::InputValue& value)
 	{
+		bIsDragStart_ = true;
 		startMousePos_ = value.get<ns::Vec2>();
 		beforeMousePos_ = value.get<ns::Vec2>();
 		beforeCameraPos_ = cameraTransform_->position; 
@@ -286,6 +288,8 @@ public:
 	}
 	void moveCamera(const ns::InputValue& value)
 	{		
+		if (!bIsDragStart_) return;
+
 		auto currentMousePos = value.get<ns::Vec2>();
 		auto delta =  currentMousePos - startMousePos_;
 		auto cacheDeltaY = currentMousePos.y - beforeMousePos_.y;
@@ -321,6 +325,10 @@ public:
 
 		NS_LOG("move camera, x {}, y {}", delta.x, delta.y);
 	}
+	void moveEndCamera(const ns::InputValue& value)
+	{
+		bIsDragStart_ = false;
+	}
 	void moveWheel(const ns::InputValue& value)
 	{
 		auto currentMousePos = value.get<ns::Vec2>();
@@ -341,6 +349,14 @@ public:
 		}
 
 		NS_LOG("move wheel, x {}", x);
+	}
+
+	void onWindowResize(const ns::Resolution& res) override
+	{
+		if(camera_)
+		{
+			camera_->setRes(res);
+		}
 	}
 
 
@@ -371,6 +387,8 @@ private:
 	ns::Mat4 rotX_;
 	bool bIsOrtho_ = false;
 	float cameraSpeed_ = 0.0001f;
+
+	bool bIsDragStart_ = false;
 };
 
 #endif

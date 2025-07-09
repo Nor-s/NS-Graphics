@@ -39,6 +39,7 @@ public:
 	{
 		return inputController_.get();
 	}
+	virtual void onWindowResize(const ns::Resolution& res){}
 
 protected:
 	std::unique_ptr<ns::InputController> inputController_;

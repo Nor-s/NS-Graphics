@@ -29,8 +29,8 @@ public:
 		float halfWidth = width / 2.0f;
 		float halfHeight = height / 2.0f;
 
-		float orthoWidth = static_cast<float>(halfWidth) / (orthoFactor_.x * 0.5f);
-		float orthoHeight = static_cast<float>(halfHeight) / (orthoFactor_.y * 0.5f);
+		float orthoWidth = static_cast<float>(width) * (orthoFactor_ );
+		float orthoHeight = static_cast<float>(height) * (orthoFactor_);
 
 		switch (mode_)
 		{
@@ -43,7 +43,7 @@ public:
 		};
 	}
 
-	const Vector2<float> getOrthoFactor() const
+	const float getOrthoFactor() const
 	{
 		return orthoFactor_;
 	}
@@ -63,13 +63,18 @@ public:
 	{
 		return up_;
 	}
+	const Resolution& getRes() const 
+	{
+		return res_;
+	}
 	void setRes(const Resolution& res)
 	{
 		res_ = res;
 	}
-	void setOrthoFactor(const Vector2<float>& res)
+	void setOrthoFactor(float factor)
 	{
-		orthoFactor_ = res;
+		orthoFactor_ = factor;
+		orthoFactor_ = std::max(std::min(1.0f, orthoFactor_), 1.0f/res_.width);
 	}
 	void setTarget(const Vec3& target)
 	{
@@ -109,7 +114,7 @@ private:
 	Vec3 up_{0.0f, 1.0f, 0.0f};
 	CameraMode mode_{};
 	Resolution res_{};
-	Vec2 orthoFactor_{};
+	float orthoFactor_{};
 	float fovRadian_{M_PI / 4.0f};
 	float nearZ_ = 1.0f;
 	float farZ_ = 5e3f;

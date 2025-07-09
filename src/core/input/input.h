@@ -6,19 +6,20 @@
 namespace ns
 {
 
-enum class InputType : uint8_t
+enum InputType : uint8_t
 {
 	MOUSE_LEFT_DOWN = 0u,
     MOUSE_MOVE,
     MOUSE_WHEEL,
-    SIZE
+    INPUT_TYPE_SIZE
 };
 
 enum class InputTrigger : uint8_t
 {
+    None = 0,
     Started = 1 << 1, 
     Triggered = 1 << 2, 
-    Ended = 1 << 3
+    Ended = 1 << 3,
 };
 
 inline InputTrigger operator|(InputTrigger a, InputTrigger b) {
