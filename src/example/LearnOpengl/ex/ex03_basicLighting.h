@@ -1,12 +1,8 @@
 #ifndef _LEARN_GL_EX_03_BASIC_LIGHTING_H_
 #define _LEARN_GL_EX_03_BASIC_LIGHTING_H_
 
-#include <core/gpu/gl/glGeometry.h>
 #include "example.h"
-#include <core/entity/component/components.h>
-#include <core/scene/nsScene.h>
 
-#define GLGEOMETRY_CAST(geo) static_cast<ns::GlGeometry*>(geo.get())
 
 /**
  * 
@@ -136,10 +132,6 @@ public:
 		basicLightShader_.init(basicLightVert_, basicLightFrag_);
 		lightObjectShader_.init(vert_, lightObjectFrag_);
 
-		using namespace ns::editor;
-
-		auto res = App::GetAppContext().res;
-
 		cubeCount_ = 10;
 
 		// set cube object
@@ -151,43 +143,7 @@ public:
 		lightObject_.transform.scaleXYZ = ns::Vec3{lightSize, lightSize, lightSize};
 		lightObject_.transform.position = ns::Vec3{cubeCount_*1.5f, 0.0f, 0.0f};
 
-		// set camera
-		cameraEntity_ = ns::Scene::CreateEntity(&scene_, "camera");
-		auto& cameraComponent = cameraEntity_.addComponent<ns::CameraComponent>();
-
-		camera_	= &cameraComponent.camera;
-		cameraTransform_ = &camera_->transform;
-		
-		cameraTransform_->position = {100, 100, 100};
-		camera_->setRes(res);
-		camera_->setOrthoFactor(0.1f);
-		camera_->setTarget({0.0, 0.0, 0.0});
-		camera_->setFov(ns::math::ToRadian(45.0f));
-		camera_->setPerspective();
-
-			// input controller
-		inputController_ = std::make_unique<ns::InputController>();
-		inputController_->bindAction(
-			ns::InputAction(ns::InputType::MOUSE_LEFT_DOWN),
-			ns::InputTrigger::Started,this,
-			&Ex03_BasicLighting::moveStartCamera
-		);
-		inputController_->bindAction(
-			ns::InputAction(ns::InputType::MOUSE_LEFT_DOWN),
-			ns::InputTrigger::Triggered,this,
-			&Ex03_BasicLighting::moveCamera
-		);
-		inputController_->bindAction(
-			ns::InputAction(ns::InputType::MOUSE_LEFT_DOWN),
-			ns::InputTrigger::Ended,this,
-			&Ex03_BasicLighting::moveEndCamera
-		);
-		inputController_->bindAction(
-			ns::InputAction(ns::InputType::MOUSE_WHEEL),
-			ns::InputTrigger::Triggered, this,
-			&Ex03_BasicLighting::moveWheel
-		);
-		App::SetCurrentInputController(inputController_.get());
+		initCameraInputController();
 	}
 	bool update(double deltaTime)
 	{
@@ -197,10 +153,10 @@ public:
 			GLGEOMETRY_CAST(object_.cube)->getBuffer()->bind();
 			basicLightShader_.setVec3("lightColor", lightColor);
 			basicLightShader_.setVec3("objectColor", ns::Vec3{1.0f, 0.5f, 0.31f});
-			basicLightShader_.setMat4("view", camera_->getView());
-			basicLightShader_.setMat4("proj", camera_->getProj());
+			basicLightShader_.setMat4("view", mainCamera_->getView());
+			basicLightShader_.setMat4("proj", mainCamera_->getProj());
 			basicLightShader_.setVec3("lightPos", lightObject_.transform.position);
-			basicLightShader_.setVec3("viewerPos", cameraTransform_->position);
+			basicLightShader_.setVec3("viewerPos", mainCameraTransform_->position);
 
 			auto before = object_.transform.position;
 
@@ -225,8 +181,8 @@ public:
 			GLGEOMETRY_CAST(lightObject_.cube)->getBuffer()->bind();
 			lightObjectShader_.setVec3("lightColor", lightColor);
 			lightObjectShader_.setMat4("transform", lightObject_.transform.get());
-			lightObjectShader_.setMat4("view", camera_->getView());
-			lightObjectShader_.setMat4("proj", camera_->getProj());
+			lightObjectShader_.setMat4("view", mainCamera_->getView());
+			lightObjectShader_.setMat4("proj", mainCamera_->getProj());
 
 			glDrawElements(GL_TRIANGLES, lightObject_.cube->getIndexSize(), GL_UNSIGNED_INT, 0);
 
@@ -247,118 +203,9 @@ public:
 
 		// light
 		ImGuiEx::DragPropertyXYZ("light object", lightObject_.transform.position.value, 0.01f, -100.0f, 100.0f);
-
-		// camera
-		ImGuiEx::DragPropertyXYZ("camera pos", cameraTransform_->position.value, 1.0f, -400.0f, 400.0f);
-		ImGuiEx::DragPropertyXYZ("target pos", camera_->getMutableTarget().value, 0.1f, -10.0f, 10.0f);
-
-		// ortho camera
-		auto windowRes = App::GetAppContext().res;
-		auto ortho = camera_->getOrthoFactor();
-
-		ImGui::Text("window width: %d, window height: %d", windowRes.width, windowRes.height);
-
-		ImGui::Checkbox("Is Ortho", &bIsOrtho_);
-		camera_->setMode(bIsOrtho_ ? ns::CameraMode::OrthoRH : ns::CameraMode::PerspectRH);
-
-		ImGui::DragFloat("ortho_factor", &ortho, 0.001f, 0.001f, 1.0f);
-
-		camera_->setOrthoFactor(ortho);
-
-		if(ImGui::IsWindowFocused())
-		{
-			bIsDragStart_ = false;
-			App::SetCurrentInputController(nullptr);
-		}
-		else
-		{
-			App::SetCurrentInputController(inputController_.get());
-		}
+		
+		drawCameraUI();
 	}
-
-public:
-	void moveStartCamera(const ns::InputValue& value)
-	{
-		bIsDragStart_ = true;
-		startMousePos_ = value.get<ns::Vec2>();
-		beforeMousePos_ = value.get<ns::Vec2>();
-		beforeCameraPos_ = cameraTransform_->position; 
-		rotY_ = ns::Mat4();
-		NS_LOG("start camera, x {}, y {}", startMousePos_.x, startMousePos_.y);
-	}
-	void moveCamera(const ns::InputValue& value)
-	{		
-		if (!bIsDragStart_) return;
-
-		auto currentMousePos = value.get<ns::Vec2>();
-		auto delta =  currentMousePos - startMousePos_;
-		auto cacheDeltaY = currentMousePos.y - beforeMousePos_.y;
-		beforeMousePos_ = currentMousePos;
-
-		// TODO: delta time and speed
-		delta.x*= -0.005f;
-		delta.y*= -0.005f;
-
-		auto at = camera_->getTarget();
-		auto up = camera_->getUp();
-		auto eye = beforeCameraPos_;
-		auto relCameraPos = eye - at;
-
-		auto forwardDir = ns::normalize(relCameraPos);
-		auto rightDir = ns::normalize(ns::cross(up, forwardDir));
-		auto upDir = ns::normalize(ns::cross(forwardDir, rightDir));
-
-		auto rotY = ns::rotate(ns::Mat4(), rightDir, delta.y);
-		auto rotX = ns::rotateY(ns::Mat4(), delta.x);
-		auto nextPos = rotY * ns::Vec4(beforeCameraPos_, 1.0f);
-
-		auto nextDot = static_cast<ns::Vec3>(ns::normalize(nextPos)) * ns::Vec3(0.0f, 1.0f, 0.0f);
-		if(abs(nextDot) > 0.95f)
-		{
-			startMousePos_.y += cacheDeltaY;
-			cameraTransform_->position =  rotX * rotY_ * ns::Vec4(beforeCameraPos_, 1.0f);
-		 	return;
-		}
-		rotY_ = rotY;
-
-		cameraTransform_->position =   rotX * rotY * ns::Vec4(beforeCameraPos_, 1.0f);
-
-		NS_LOG("move camera, x {}, y {}", delta.x, delta.y);
-	}
-	void moveEndCamera(const ns::InputValue& value)
-	{
-		bIsDragStart_ = false;
-	}
-	void moveWheel(const ns::InputValue& value)
-	{
-		auto currentMousePos = value.get<ns::Vec2>();
-		float speed = 1.0f;
-		float x = value.get<float>();
-
-		auto at = camera_->getTarget();
-		auto up = camera_->getUp();
-		auto eye = cameraTransform_->position;
-		auto relCameraPos = eye - at;
-		auto forwardDir = ns::normalize(relCameraPos);
-
-		auto next = forwardDir*speed*x + relCameraPos;
-
-		if(ns::length2(next) > 30.0f)
-		{
-			cameraTransform_->position = next + at;
-		}
-
-		NS_LOG("move wheel, x {}", x);
-	}
-
-	void onWindowResize(const ns::Resolution& res) override
-	{
-		if(camera_)
-		{
-			camera_->setRes(res);
-		}
-	}
-
 
 private:
 	int cubeCount_ = 1;
@@ -374,21 +221,6 @@ private:
 	float angle_{};
 	ExEntity object_;
 	ExEntity lightObject_;
-
-	// for camera
-	ns::Scene scene_{};
-	ns::Entity cameraEntity_;
-	ns::Camera* camera_;
-	ns::Transform* cameraTransform_;
-	ns::Vec2 startMousePos_;
-	ns::Vec2 beforeMousePos_;
-	ns::Vec3 beforeCameraPos_;
-	ns::Mat4 rotY_;
-	ns::Mat4 rotX_;
-	bool bIsOrtho_ = false;
-	float cameraSpeed_ = 0.0001f;
-
-	bool bIsDragStart_ = false;
 };
 
 #endif

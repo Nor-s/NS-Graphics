@@ -37,10 +37,10 @@ enum class DepthFormat
 
 struct VertexLayout
 {
-    uint32_t index;
-    uint32_t size;
-    uint32_t stride;
-    size_t   offset;
+    uint32_t index{};
+    uint32_t size{};
+    uint32_t stride{};
+    size_t   offset{};
 };
 
 // vec4 size list
@@ -50,10 +50,17 @@ struct InstancingLayout
     uint32_t startIndex{0};
     uint32_t count{0};
 };
+struct BufferRawData
+{
+	size_t size{0};
+	void* data{nullptr};
+};
 
 using Layouts = std::vector<VertexLayout>;
-using InstancingLayouts = InstancingLayout;
-using InstancingData = std::vector<ns::Vec4>;
+using InstancingLayouts = std::vector<InstancingLayout>;
+using BufferRawDatas = std::vector<BufferRawData>;
+
+using InstancingData = std::vector<std::vector<ns::Vec4>>;
 using IndexData = std::vector<uint32_t>;
 using VertexData = std::vector<float>;
 

@@ -7,14 +7,14 @@
 namespace ns
 {
 
-class GlGeometry: public Geometry
+class GlGeometry : public Geometry
 {
 public:
-    GlGeometry() = default;
-    ~GlGeometry() = default;
-    virtual void init(const GeometryInfo& info, const Layouts& layouts, const InstancingLayout& instancingLayout = {}) override;
-    virtual void updateInstancingBuffer() override;
-    GlMeshBuffer* getBuffer();
+	GlGeometry() = default;
+	~GlGeometry() = default;
+	void init(const GeometryInfo& info, const Layouts& layouts, const InstancingLayouts& instancingLayout={});
+	virtual void updateInstancingBuffer(int idx) override;
+	GlMeshBuffer* getBuffer();
 
 private:
 	std::unique_ptr<GlMeshBuffer> buffer_;

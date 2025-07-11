@@ -20,26 +20,25 @@ public:
     size_t getIndexSize() {return geometry_.index.size();}
     size_t getInstancingCount() 
 	{
-		if(instancingLayout_.count == 0) 
+		if(instancingLayout_.size() == 0 || geometry_.instancingVertex.size() == 0) 
 			return 0;
-		return geometry_.instancingVertex.size()/instancingLayout_.count;
+		return geometry_.instancingVertex[0].size()/instancingLayout_[0].count;
 	}
 	GeometryInfo& getGeoInfo()
 	{
 		return geometry_;
 	}
-	void setInstancingLayout(int startIndex, int count)
+	void pushInstancingLayout(int startIndex, int count)
 	{
-		instancingLayout_.count = count;
-		instancingLayout_.startIndex= startIndex;
+		instancingLayout_.emplace_back(startIndex, count);
 	}
 
-	virtual void init(const GeometryInfo& info, const Layouts& layouts, const InstancingLayout& instancingLayout = {}) = 0;
-	virtual void updateInstancingBuffer(){};
+	virtual void init(const GeometryInfo& info, const Layouts& layouts, const InstancingLayouts& instancingLayout = {}) = 0;
+	virtual void updateInstancingBuffer(int idx){};
 
 protected:
 	GeometryInfo geometry_;
-	InstancingLayout instancingLayout_;
+	InstancingLayouts instancingLayout_;
 };
 
 }	 // namespace ns

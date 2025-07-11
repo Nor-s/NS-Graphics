@@ -9,6 +9,12 @@
 namespace ns
 {
 
+struct BasicLighInstancingtMaterial
+{
+    MATERIA_NAME(BasicLighInstancingtMaterial);
+    BasicLightInstancingInterop interop;
+};
+
 struct BasicLightMaterial
 {
     MATERIA_NAME(BasicLightMaterial);

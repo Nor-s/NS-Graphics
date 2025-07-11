@@ -97,20 +97,20 @@ public:
     void bind();
     void unbind() const;
     void setVertexBuffer(size_t size, const void* data, const Layouts& layouts);
-    void setVertexInstancingBuffer(size_t size, const void* data, const InstancingLayouts& layouts);
-    void updateVertexInstancingBuffer(size_t size, const void* data);
+    void setVertexInstancingBuffer(int vboIdx, size_t size, const void* data, const InstancingLayout& layouts);
+    void updateVertexInstancingBuffer(int vboIdx, size_t size, const void* data);
     void setIndexBuffer(size_t size, const void* data);
     GLuint getVao()  const {return vao_;}
 
     bool isInstancing() 
     {
-        return instancingVbo_.isValid();
+        return !instancingVbo_.empty();
     }
 
 private:
     GLuint vao_;
     StaticVertexBuffer staticVbo_;
-    DynamicVertexBuffer instancingVbo_;
+    std::vector<DynamicVertexBuffer> instancingVbo_;
     IndexBuffer ebo_;
 };
 

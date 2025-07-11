@@ -66,6 +66,10 @@ void GlRenderer::render(Scene* scene)
 												UpdateState& state, GeometryComponent& geo,
 												TransformComponent& transform)
 			{
+				const int instancingCount = geo.geometry->getInstancingCount();
+				const int vertexSize = geo.geometry->getGeoInfo().vertex.size();
+				const int indexSize = geo.geometry->getIndexSize();
+
 				GLGEOMETRY_CAST(geo.geometry)->getBuffer()->bind();
 				basicLightShader->setMat4("transform", transform.transform.get());
 				basicLightShader->setVec3(material.interop.color_name, material.interop.color);
@@ -77,7 +81,28 @@ void GlRenderer::render(Scene* scene)
 				basicLightShader->setMat4(cameraInterop.proj_name, cameraInterop.proj);
 				basicLightShader->setMat4(cameraInterop.view_name, cameraInterop.view);
 
-				glDrawElements(GL_TRIANGLES, geo.geometry->getIndexSize(), GL_UNSIGNED_INT, 0);
+				if(geo.geometry->getIndexSize() != 0)
+				{
+					if(instancingCount != 0)
+					{
+						GLCHECK(glDrawElementsInstanced(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0, instancingCount));
+					}
+					else 
+					{
+						GLCHECK(glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0));
+					}
+				}
+				else 
+				{
+					if(instancingCount != 0)
+					{
+						GLCHECK(glDrawArrays(GL_TRIANGLES, 0, vertexSize));
+					}
+					else 
+					{
+						GLCHECK(glDrawArraysInstanced(GL_TRIANGLES, 0, vertexSize, instancingCount));
+					}
+				}
 
 				GLGEOMETRY_CAST(geo.geometry)->getBuffer()->unbind();
 			});
