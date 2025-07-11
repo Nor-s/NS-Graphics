@@ -33,11 +33,7 @@ enum class DepthFormat
 	DEPTH24_STENCIL8
 };
 
-struct GeometryInfo
-{
-	std::vector<float> vertex;
-	std::vector<uint32_t> index;
-};
+
 
 struct VertexLayout
 {
@@ -47,7 +43,26 @@ struct VertexLayout
     size_t   offset;
 };
 
+// vec4 size list
+// stride = vec4 * count
+struct InstancingLayout
+{
+    uint32_t startIndex{0};
+    uint32_t count{0};
+};
+
 using Layouts = std::vector<VertexLayout>;
+using InstancingLayouts = InstancingLayout;
+using InstancingData = std::vector<ns::Vec4>;
+using IndexData = std::vector<uint32_t>;
+using VertexData = std::vector<float>;
+
+struct GeometryInfo
+{
+	VertexData vertex;
+	IndexData  index;
+	InstancingData instancingVertex;
+};
 
 }	 // namespace ns
 

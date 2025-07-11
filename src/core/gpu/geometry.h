@@ -18,10 +18,23 @@ public:
 public:
     virtual ~Geometry()=default;
     size_t getIndexSize() {return geometry_.index.size();}
-    virtual void init(const GeometryInfo& info, const Layouts& layouts) = 0;
+    size_t getInstancingCount() 
+	{
+		if(instancingLayout_.count == 0) 
+			return 0;
+		return geometry_.instancingVertex.size()/instancingLayout_.count;
+	}
+	GeometryInfo& getGeoInfo()
+	{
+		return geometry_;
+	}
+
+	virtual void init(const GeometryInfo& info, const Layouts& layouts, const InstancingLayout& instancingLayout = {}) = 0;
+	virtual void updateInstancingBuffer(){};
 
 protected:
 	GeometryInfo geometry_;
+	InstancingLayout instancingLayout_;
 };
 
 }	 // namespace ns
