@@ -33,7 +33,7 @@ void GlGeometry::updateInstancingBuffer()
 {
 	auto& instancingVertex = geometry_.instancingVertex;
 	buffer_->bind();
-	if(buffer_->isInstancing())
+	if(!buffer_->isInstancing())
 	{
 		buffer_->setVertexInstancingBuffer(instancingVertex.size()*sizeof(ns::Vec4), instancingVertex.data(), instancingLayout_);
 	}

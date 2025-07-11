@@ -9,6 +9,7 @@
 #include "ex/ex01_transform.h"
 #include "ex/ex02_coordinate.h"
 #include "ex/ex03_basicLighting.h"
+#include "ex/ex04_instancing.h"
 
 #include "imguiExampleWindow.h"
 
@@ -30,6 +31,7 @@ void LearnGL::addImguiModule()
 
 void LearnGL::initEnd()
 {
+	examples_.emplace_back(std::make_unique<Ex04_Instancing>());
 	examples_.emplace_back(std::make_unique<Ex03_BasicLighting>());
 	examples_.emplace_back(std::make_unique<Ex02_Coordinate>());
 	examples_.emplace_back(std::make_unique<Ex01_Transform>());

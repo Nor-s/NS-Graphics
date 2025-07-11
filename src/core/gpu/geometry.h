@@ -28,6 +28,11 @@ public:
 	{
 		return geometry_;
 	}
+	void setInstancingLayout(int startIndex, int count)
+	{
+		instancingLayout_.count = count;
+		instancingLayout_.startIndex= startIndex;
+	}
 
 	virtual void init(const GeometryInfo& info, const Layouts& layouts, const InstancingLayout& instancingLayout = {}) = 0;
 	virtual void updateInstancingBuffer(){};
