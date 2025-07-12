@@ -16,6 +16,8 @@ public:
 
 private:
     std::unique_ptr<BoxEntity> box_;
+    std::vector<std::vector<std::vector<ns::Entity>>> block_;
+    int length_{10};
 };
 
 };	  // namespace vst

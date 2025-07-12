@@ -20,6 +20,11 @@ Entity Scene::CreateEntity(Scene* scene, std::string_view name)
 	return entity;
 }
 
+Entity Scene::createEntity(std::string_view name)
+{
+	return CreateEntity(this, name);
+}
+
 Scene::Scene()
 {
 }
@@ -72,6 +77,12 @@ void Scene::onUpdate()
 	// todo: destroy, deactivate callback
 
 	// init callback
+	registry_.view<InitializeState, BasicLightInstancingMaterial, GeometryComponent>().each(
+		[&](const entt::entity& entity, auto& statetate, BasicLightInstancingMaterial& mat, GeometryComponent& geo)
+		{
+			geo.geometry->pushInstancingLayout(4, 4);
+			geo.geometry->pushInstancingLayout(8, 1);
+		});
 	registry_.view<InitializeState, InitializeCallback>().each(
 		[&](const entt::entity& entity, auto& statetate, auto& cb)
 		{

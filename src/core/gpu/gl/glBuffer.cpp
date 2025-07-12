@@ -9,11 +9,12 @@ GlMeshBuffer::GlMeshBuffer()
 }
 GlMeshBuffer::~GlMeshBuffer()
 {
-	if (vao_)
-	{
-		GLCHECK(glDeleteVertexArrays(1, &vao_));
-		vao_ = 0;
-	}
+	// todo:: delete buffer
+	// if (vao_)
+	// {
+	// 	GLCHECK(glDeleteVertexArrays(1, &vao_));
+	// 	vao_ = 0;
+	// }
 }
 
 void GlMeshBuffer::bind()
@@ -21,6 +22,10 @@ void GlMeshBuffer::bind()
 	glBindVertexArray(vao_);
 	staticVbo_.bind();
 	ebo_.bind();
+	for(auto& it: instancingVbo_)
+	{
+		it.bind();
+	}
 }
 
 void GlMeshBuffer::unbind() const
@@ -70,8 +75,10 @@ void GlMeshBuffer::updateVertexInstancingBuffer(int vboIdx, size_t size, const v
 {
 	if (size != 0 && data == nullptr)
 		return;
-	assert(vboIdx < instancingVbo_.size());
-
+	if(vboIdx >= instancingVbo_.size())
+    {
+        instancingVbo_.resize(vboIdx + 1);
+    }
 	instancingVbo_[vboIdx].bind();
 	instancingVbo_[vboIdx].subBufferData(size, data);
 }

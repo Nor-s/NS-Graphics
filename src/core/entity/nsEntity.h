@@ -1,17 +1,16 @@
 #ifndef _NS_GRAPHICS_CORE_SCENE_NSENTITY_H_
 #define _NS_GRAPHICS_CORE_SCENE_NSENTITY_H_
 
-#include "scene/nsScene.h"
 #include "../common/common.h"
+#include "scene/nsScene.h"
 
 #include <vector>
 #include <memory>
 
+#include <entt/entt.hpp>
+
 namespace ns
 {
-
-class UserEntity;
-class Scene;
 
 class Entity
 {

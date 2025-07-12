@@ -13,8 +13,8 @@ public:
 	GlGeometry() = default;
 	~GlGeometry() = default;
 	void init(const GeometryInfo& info, const Layouts& layouts, const InstancingLayouts& instancingLayout={});
-	virtual void updateInstancingBuffer(int idx) override;
-	GlMeshBuffer* getBuffer();
+	virtual void updateInstancingBuffer(int idx, size_t size, void* data) override;
+ 	GlMeshBuffer* getBuffer();
 
 private:
 	std::unique_ptr<GlMeshBuffer> buffer_;

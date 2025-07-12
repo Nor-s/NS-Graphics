@@ -36,6 +36,9 @@ nsgraphics_src =[
 'src/core/entity/userEntity.cpp',
 'src/core/entity/nsEntity.cpp',
 
+'src/core/entity/component/nsMaterial.cpp',
+'src/core/entity/component/components.cpp',
+
 'src/core/gpu/geometry.cpp',
 
 'src/core/gpu/gl/glRenderTarget.cpp',

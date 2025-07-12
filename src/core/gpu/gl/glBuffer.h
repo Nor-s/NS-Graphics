@@ -28,10 +28,11 @@ public:
     }
 	~GlBuffer()
     {
-        if(id_ != 0)
-        {
-            GLCHECK(glDeleteBuffers(1, &id_));
-        }
+        // todo: delete buffer
+        // if(id_ != 0)
+        // {
+        //     GLCHECK(glDeleteBuffers(1, &id_));
+        // }
     }
 
     void bind()
@@ -102,9 +103,9 @@ public:
     void setIndexBuffer(size_t size, const void* data);
     GLuint getVao()  const {return vao_;}
 
-    bool isInstancing() 
+    bool isInstancing(int idx) 
     {
-        return !instancingVbo_.empty();
+        return (instancingVbo_.size() > idx);
     }
 
 private:

@@ -32,11 +32,11 @@ public:
 	void content() override
 	{
 		instancingShader_.init(Shaders::basicLighInstancingtVert, Shaders::basicLightFrag);
-		lightShader_.init(Shaders::basicVert, Shaders::solidColorFrag);
 
 		instancingCount_ = instancingLength_*instancingLength_*instancingLength_;
 		transforms_.resize(instancingCount_);
 		rawTransforms_.resize(instancingCount_);
+		std::vector<ns::Vec4> colors;
 		for(int i = 0; i < instancingLength_; i++)
 		{
 			for(int j = 0; j < instancingLength_; j++)
@@ -47,17 +47,16 @@ public:
 					transforms_[idx].position = {i*50.0f, j*50.0f, k*50.0f};
 					transforms_[idx].scaleXYZ = {40.0f, 40.0f, 40.0f};
 					rawTransforms_[idx] = transforms_[idx].get();
+					colors.push_back({float(i)/instancingLength_, float(i)/instancingLength_, float(i)/instancingLength_, 1.0f});
 				}
 			}
 		}
 		// cube
 		geo_ = ns::Geometry::CreateCubeWithNormal();
-		auto& instancingVertex = geo_->getGeoInfo().instancingVertex;
-		instancingVertex.resize(1);
-		instancingVertex[0].resize(rawTransforms_.size()*4);
-		std::memcpy(instancingVertex[0].data(), rawTransforms_.data(), rawTransforms_.size()*sizeof(ns::Mat4));
 		geo_->pushInstancingLayout(4,4);
-		geo_->updateInstancingBuffer(0);
+		geo_->updateInstancingBuffer(0, rawTransforms_.size()*sizeof(ns::Mat4), rawTransforms_.data());
+		geo_->pushInstancingLayout(8,1);
+		geo_->updateInstancingBuffer(1, colors.size()*sizeof(ns::Vec4), colors.data());
 
 		initCameraInputController();
 		mainCameraTransform_->position = {1500, 1500, 1500};
@@ -71,7 +70,6 @@ public:
 		GLGEOMETRY_CAST(geo_)->getBuffer()->bind();
 		{
 			instancingShader_.setVec3("lightColor", lightColor);
-			instancingShader_.setVec3("objectColor", ns::Vec3{1.0f, 0.5f, 0.31f});
 			instancingShader_.setMat4("view", mainCamera_->getView());
 			instancingShader_.setMat4("proj", mainCamera_->getProj());
 			instancingShader_.setVec3("lightPos", lightPos);

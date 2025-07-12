@@ -83,25 +83,11 @@ void GlRenderer::render(Scene* scene)
 
 				if(geo.geometry->getIndexSize() != 0)
 				{
-					if(instancingCount != 0)
-					{
-						GLCHECK(glDrawElementsInstanced(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0, instancingCount));
-					}
-					else 
-					{
-						GLCHECK(glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0));
-					}
+					GLCHECK(glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0));
 				}
 				else 
 				{
-					if(instancingCount != 0)
-					{
-						GLCHECK(glDrawArrays(GL_TRIANGLES, 0, vertexSize));
-					}
-					else 
-					{
-						GLCHECK(glDrawArraysInstanced(GL_TRIANGLES, 0, vertexSize, instancingCount));
-					}
+					GLCHECK(glDrawArrays(GL_TRIANGLES, 0, vertexSize));
 				}
 
 				GLGEOMETRY_CAST(geo.geometry)->getBuffer()->unbind();
@@ -124,6 +110,50 @@ void GlRenderer::render(Scene* scene)
 				solidColorShader->setMat4(cameraInterop.view_name, cameraInterop.view);
 
 				glDrawElements(GL_TRIANGLES, geo.geometry->getIndexSize(), GL_UNSIGNED_INT, 0);
+
+				GLGEOMETRY_CAST(geo.geometry)->getBuffer()->unbind();
+			});
+	}
+
+	auto& instancingShader = g_shaders[BasicLightInstancingMaterial::name];
+	{
+		assert(instancingShader != nullptr);
+		instancingShader->use();
+		registry.view<BasicLightInstancingMaterial, UpdateState, GeometryComponent>().each(
+			[&cameraInterop, &instancingShader](const entt::entity& entity, BasicLightInstancingMaterial& material,
+												UpdateState& state, GeometryComponent& geo)
+			{
+				const int instancingCount = geo.geometry->getInstancingCount();
+				const int vertexSize = geo.geometry->getGeoInfo().vertex.size();
+				const int indexSize = geo.geometry->getIndexSize();
+
+
+				if(material.interop.bIsDirty)
+				{
+					auto& transform = material.interop.transform;
+					auto& color = material.interop.color;
+					geo.geometry->updateInstancingBuffer(0, transform.size()*sizeof(ns::Mat4), transform.data());
+					geo.geometry->updateInstancingBuffer(1, color.size()*sizeof(ns::Vec4), color.data());
+					material.interop.bIsDirty = false;
+				}
+
+				GLGEOMETRY_CAST(geo.geometry)->getBuffer()->bind();
+
+				instancingShader->setMat4(cameraInterop.proj_name, cameraInterop.proj);
+				instancingShader->setMat4(cameraInterop.view_name, cameraInterop.view);
+
+				instancingShader->setVec3(material.interop.lightColor_name, material.interop.lightColor);
+				instancingShader->setVec3(material.interop.lightPos_name, material.interop.lightPos);
+				instancingShader->setVec3(cameraInterop.eyeWorldPosition_name, cameraInterop.eyeWorldPosition);
+
+				if(geo.geometry->getIndexSize() != 0)
+				{
+					GLCHECK(glDrawElementsInstanced(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0, instancingCount));
+				}
+				else 
+				{
+					GLCHECK(glDrawArraysInstanced(GL_TRIANGLES, 0, 36, instancingCount));
+				}
 
 				GLGEOMETRY_CAST(geo.geometry)->getBuffer()->unbind();
 			});

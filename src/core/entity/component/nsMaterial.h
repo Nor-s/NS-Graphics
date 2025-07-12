@@ -3,27 +3,34 @@
 
 #include "core/gpu/shaderInterop.h"
 
-#define MATERIA_NAME(a)  \
+#include <vector>
+
+#define MATERIAL_NAME(a)  \
     static constexpr const char* name = #a
 
 namespace ns
 {
-
-struct BasicLighInstancingtMaterial
-{
-    MATERIA_NAME(BasicLighInstancingtMaterial);
-    BasicLightInstancingInterop interop;
-};
+class Scene;
+class Entity;
 
 struct BasicLightMaterial
 {
-    MATERIA_NAME(BasicLightMaterial);
+    MATERIAL_NAME(BasicLightMaterial);
     BasicLightInterop interop;
+};
+
+struct BasicLightInstancingMaterial
+{
+    MATERIAL_NAME(BasicLightInstancingMaterial);
+    BasicLightInstancingInterop interop;
+
+    Entity createInstance(Scene* scene);
+    void updateInstance(Entity& entity);
 };
 
 struct SolidColorMaterial
 {
-    MATERIA_NAME(SolidColorMaterial);
+    MATERIAL_NAME(SolidColorMaterial);
     SolidColorInterop interop;
 };
 

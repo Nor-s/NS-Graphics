@@ -13,6 +13,7 @@ namespace ns
 {
 
 class GlGeometry;
+
 struct NameComponent
 {
 	NameComponent(std::string_view name) : name(name)
@@ -25,10 +26,24 @@ struct TransformComponent
 {
 	Transform transform{};
 };
+struct ColorComponent
+{
+	ns::Vec4 color;
+};
 
 struct GeometryComponent
 {
 	std::unique_ptr<Geometry> geometry{};
+};
+
+template <typename T>
+struct InstancingComponent
+{
+	InstancingComponent(int instancingIdx, T& mat) : instancingIdx(instancingIdx), material(mat)
+	{
+	}
+	int instancingIdx;
+	T& material;
 };
 
 struct CameraComponent

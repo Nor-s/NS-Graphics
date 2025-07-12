@@ -26,6 +26,8 @@ public:
 	virtual void resize(const Resolution& res);
 	virtual void draw() {};
 
+	Entity createEntity(std::string_view name);
+
 	uint64_t getSceneImage();
 	Resolution getResolution();
 	virtual InputController* getInputController();

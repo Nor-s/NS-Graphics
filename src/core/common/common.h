@@ -49,6 +49,7 @@ struct InstancingLayout
 {
     uint32_t startIndex{0};
     uint32_t count{0};
+	uint32_t instancingCount{0};
 };
 struct BufferRawData
 {
@@ -60,7 +61,6 @@ using Layouts = std::vector<VertexLayout>;
 using InstancingLayouts = std::vector<InstancingLayout>;
 using BufferRawDatas = std::vector<BufferRawData>;
 
-using InstancingData = std::vector<std::vector<ns::Vec4>>;
 using IndexData = std::vector<uint32_t>;
 using VertexData = std::vector<float>;
 
@@ -68,7 +68,6 @@ struct GeometryInfo
 {
 	VertexData vertex;
 	IndexData  index;
-	InstancingData instancingVertex;
 };
 
 }	 // namespace ns

@@ -44,10 +44,12 @@ namespace ns
 
     struct BasicLightInstancingInterop
     {
-        INTEROP_VAR_WITH_INIT(ns::Vec3, color, ns::Vec3(1.0f, 0.5f, 0.25f));
         INTEROP_VAR_WITH_INIT(ns::Vec3, lightColor, ns::Vec3(1.0f,1.0f,1.0f));
         INTEROP_VAR_WITH_INIT(ns::Vec3, lightPos, ns::Vec3(0.0f, 100.0f, 0.0f));
-        std::vector<ns::Vec4> instancingData_;
+
+        std::vector<ns::Mat4> transform{};
+        std::vector<ns::Vec4> color{};
+        bool bIsDirty{false};
     };
 
     struct SolidColorInterop
