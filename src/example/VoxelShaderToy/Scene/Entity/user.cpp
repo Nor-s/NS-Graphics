@@ -18,7 +18,7 @@ void User::setupInputController(ns::InputController* inputController)
 	camera_ =  &addComponent<ns::CameraComponent>().camera;
 	camera_->setTarget({0.0f,0.0f,0.0f});
 	camera_->setPerspective();
-	camera_->transform.position = {100.0f,100.0f,100.0f};
+	camera_->transform.position = {1000.0f,1000.0f,1000.0f};
 	r_transform_ = &camera_->transform;//getComponent<ns::TransformComponent>().transform;
 }
 

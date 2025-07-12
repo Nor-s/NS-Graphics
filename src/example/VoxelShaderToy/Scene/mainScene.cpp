@@ -29,14 +29,14 @@ MainScene::MainScene()
 					block_[i][j][k] = instancing.createInstance(this);
 					auto& instance = block_[i][j][k];
 					instance.getComponent<ns::TransformComponent>().transform.position = {
-						i * 50.0f,
-						j * 50.0f,
-						k * 50.0f
+						i * 11.0f,
+						j * 11.0f,
+						k * 11.0f
 					};
 					instance.getComponent<ns::TransformComponent>().transform.scaleXYZ = {
-						45.0f,
-						45.0f,
-						45.0f
+						10.0f,
+						10.0f,
+						10.0f
 					};
 					instance.getComponent<ns::ColorComponent>().color = {
 						(float)i/length_ ,
