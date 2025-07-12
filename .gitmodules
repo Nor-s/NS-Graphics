@@ -13,3 +13,6 @@
 [submodule "subprojects/entt"]
 	path = subprojects/entt
 	url = https://github.com/Nor-s/entt.git
+[submodule "subprojects/sol2"]
+	path = subprojects/sol2
+	url = https://github.com/Nor-s/sol2.git

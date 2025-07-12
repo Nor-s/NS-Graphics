@@ -7,8 +7,6 @@ cmake = import('cmake')
 spdlog_dep = dependency('spdlog', required: true)
 sdl2_dep = dependency('sdl2')
 imgui_dep = cmake.subproject('imgui').dependency('imgui')
-lua_proj = subproject('lua')
-lua_dep = lua_proj.get_variable('lua_dep')
 
 entt_proj = cmake.subproject('entt')
 entt_dep = entt_proj.dependency('EnTT')
@@ -22,7 +20,6 @@ dep_list =[
     gl_dep,
     imgui_dep,
     entt_dep,
-    lua_dep,
 ]
 
 
