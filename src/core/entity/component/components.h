@@ -47,18 +47,47 @@ struct InstancingComponent
 	T& material;
 };
 
+enum class TargetAnimationType 
+{
+	None,
+	Linear,
+	Overshoot,
+};
+
+struct SimpleTargetAnimationProp
+{
+ 	float overshootFactor{1.70158};
+};
+
 template <typename T>
 struct SimpleTargetAnimationComponent
 {
-	SimpleTargetAnimationComponent(T& source, T dest) : source(source), dest(dest)
+	SimpleTargetAnimationComponent(TargetAnimationType animType, const T& source, const T& dest, float duration, const SimpleTargetAnimationProp& targetProp={}) 
+	: animType(animType), source(source), dest(dest), duration(duration), targetProp(targetProp)
 	{
+		totalTime = 0.0f;
 	}
-	T Lerp(float t)
+
+	T Lerp(float deltaTime)
 	{
+		totalTime += deltaTime;
+		float t = std::clamp(totalTime/duration, 0.0f, 1.0f);
+
+		if (animType == TargetAnimationType::Overshoot)
+			t = Interpolation::EaseOutBack(t, targetProp.overshootFactor);
+
 		return Interpolation::Lerp(source, dest, t);
 	}
-	T& source;
+	void reset()
+	{
+		totalTime = 0.0f;
+	}
+	T source;
 	T dest;
+	float duration{1.0f};
+	TargetAnimationType animType{TargetAnimationType::Linear};
+	float totalTime{0.0f};
+	SimpleTargetAnimationProp targetProp{};
 };
 
 struct CameraComponent

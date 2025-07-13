@@ -16,10 +16,11 @@ public:
 		std::uniform_int_distribution dis(min, max);
 		return dis(mt19937);
 	}
-	static double RangeDouble(double min, double max)
+	template<typename T>
+	static T Range(double min, double max)
 	{
 		std::uniform_real_distribution dis(min, max);
-		return dis(mt19937);
+		return static_cast<T>(dis(mt19937));
 	}
 };
 
