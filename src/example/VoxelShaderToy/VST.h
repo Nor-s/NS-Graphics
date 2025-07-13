@@ -16,6 +16,7 @@ public:
 protected:
 	virtual void initEnd() override final;
 	virtual void addImguiModule() override final;
+
 };
 
 }	 // namespace vst

@@ -1,16 +1,32 @@
 #include <sol/sol.hpp>
-#include <cassert>
+#include <iostream>
 
-struct vars {
-    int boop = 0;
-};
+int main()
+{
+	sol::state lua;
+	sol::protected_function pf;
+	for (int i = 0; i < 1000; i++)
+	{
+		auto result =
+			lua.safe_script("function compute(i, j, k) i= i+j if  i>0 then return -11 end return i + j + k end",
+							sol::script_pass_on_error);
+		int a;
+		if (result.valid())
+		{
+			auto f = lua.get<sol::function>("compute");
+		 	pf = f;
+			sol::protected_function_result pfr = pf(1, 2, 3);
+			if (pfr.valid())
+			{
+				a = pfr;
+			}
+		}
+	}
 
-int main() {
-    sol::state lua;
-    lua.new_usertype<vars>("vars", "boop", &vars::boop);
-    lua.script("beep = vars.new()\n"
-               "beep.boop = 1");
-    assert(lua.get<vars>("beep").boop == 1);
-    std::cout<< "Lua script executed successfully, boop value is: " 
-              << lua.get<vars>("beep").boop << std::endl;
+	sol::protected_function_result pfr = pf(1, 2, 100);
+	int k = pfr;
+
+	
+
+	return 0;
 }

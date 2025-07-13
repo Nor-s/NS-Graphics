@@ -141,7 +141,12 @@ std::unique_ptr<GlShader> CreateBasicLightInstancingShader()
 
         void main()
         {
-			float ambientStrength = 0.1f;
+			if(color.r < 0.0f)
+			{
+				discard;
+				return;
+			}
+			float ambientStrength = 0.8f;
 			vec3 ambient = ambientStrength * lightColor;
 
 			vec3 toFace = normalize(normal);

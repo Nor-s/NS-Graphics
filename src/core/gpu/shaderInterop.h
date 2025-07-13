@@ -14,7 +14,12 @@
 #define INTEROP_UBO_VAR(type, var)  \
     type var;
 
-
+enum class InstancingProp
+{
+    Transform,
+    Color,
+    Count
+};
 
 namespace ns
 {

@@ -4,14 +4,17 @@
 
 namespace ns::editor
 {
-ImguiTextEditor::ImguiTextEditor()
-{
-	init();
-}
 
 void ImguiTextEditor::init()
 {
 	editor_.SetLanguageDefinition(lang_);
+	editor_.OnEnterCharacter = [this]() {
+		if (this->context_.typeCallback)
+		{
+			this->context_.typeCallback(this->editor_.GetText());
+		}
+	};
+	editor_.SetText(this->context_.getTextCallback ? this->context_.getTextCallback() : "");
 }
 
 void ImguiTextEditor::draw()

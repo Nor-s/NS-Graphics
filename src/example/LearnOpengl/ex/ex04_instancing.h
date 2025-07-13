@@ -95,7 +95,7 @@ private:
 	std::vector<ns::Mat4> rawTransforms_;
 	std::vector<ns::Transform> transforms_;
 
-	size_t instancingLength_ = 10;
+	size_t instancingLength_ = 33;
 	size_t instancingCount_ = 1000;
 };
 

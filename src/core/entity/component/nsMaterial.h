@@ -8,6 +8,7 @@
 #define MATERIAL_NAME(a)  \
     static constexpr const char* name = #a
 
+
 namespace ns
 {
 class Scene;
