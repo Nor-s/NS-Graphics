@@ -8,6 +8,7 @@
 #include "callbackComponent.h"
 #include "tags.h"
 #include "nsMaterial.h"
+#include "core/common/nsInterpolation.h"
 
 namespace ns
 {
@@ -44,6 +45,20 @@ struct InstancingComponent
 	}
 	int instancingIdx;
 	T& material;
+};
+
+template <typename T>
+struct SimpleTargetAnimationComponent
+{
+	SimpleTargetAnimationComponent(T& source, T dest) : source(source), dest(dest)
+	{
+	}
+	T Lerp(float t)
+	{
+		return Interpolation::Lerp(source, dest, t);
+	}
+	T& source;
+	T dest;
 };
 
 struct CameraComponent

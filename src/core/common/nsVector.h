@@ -60,6 +60,12 @@ struct Vector3
 	{
 		memset(value, 0, sizeof value);
 	}
+	Vector3(T x)
+	{
+		value[0] = x;
+		value[1] = x;
+		value[2] = x;
+	}
 	Vector3(T x, T y, T z)
 	{
 		value[0] = x;

@@ -53,10 +53,13 @@ MainScene::MainScene()
 					auto& instance = block_[i][j][k];
 					instance.getComponent<ns::TransformComponent>().transform.position = {(i - halfLength) * 10.0f, (j - halfLength) * 10.0f,
 																						  (k - halfLength) * 10.0f};
-					instance.getComponent<ns::TransformComponent>().transform.scaleXYZ = {9.5f, 9.5f, 9.5f};
+					ns::Vec3& instanceScale = instance.getComponent<ns::TransformComponent>().transform.scaleXYZ;
+					instanceScale = ns::Vec3{9.5f};
 					instance.getComponent<ns::ColorComponent>().color = {(float) i / length_, 
 																		 (float) j / length_,
 																		 (float) k / length_, 1.0f};
+					auto& anim = instance.addComponent<ns::SimpleTargetAnimationComponent<ns::Vec3>>(instanceScale, instanceScale);
+					instanceScale = ns::Vec3(9.5f*ns::Random::RangeDouble(1.0, 3.0f));
 					instancing.updateInstance(instance);
 				}
 			}
@@ -68,6 +71,7 @@ void MainScene::onUpdate()
 {
 	ns::Scene::onUpdate();
 	static bool bIsUpdate = false;
+	static bool bIsCompile = false;
 	static sol::state lua;
 	if(!bIsUpdate) 
 	{
@@ -85,6 +89,7 @@ void MainScene::onUpdate()
 			{
 				luaComp.bIsDirty = false;
 				lua.safe_script("function compute(x,y,z,t) "+ luaComp.luaString + " end", sol::script_pass_on_error);
+				bIsCompile = true;
 			}
 			auto f = lua.get<sol::function>("compute");
 			pf = f;
@@ -102,8 +107,16 @@ void MainScene::onUpdate()
 				for(int z =0; z < length_; ++z)
 				{
 					auto& instance = block_[x][y][z];
+					ns::Vec3& instanceScale = instance.getComponent<ns::TransformComponent>().transform.scaleXYZ;
+					if (bIsCompile)
+					{
+						instanceScale = ns::Vec3(9.5f*ns::Random::RangeDouble(1.0, 3.0));
+					}
 					auto& color = instance.getComponent<ns::ColorComponent>().color;
+					auto& anim = instance.getComponent<ns::SimpleTargetAnimationComponent<ns::Vec3>>();
 					sol::protected_function_result pfr = pf(x - halfLength, y - halfLength, z - halfLength, 0);
+
+					instanceScale = anim.Lerp(0.05f);
 					if (pfr.valid() && pfr.return_count() == 1 && pfr.get_type(0) == sol::type::number)
 					{
 						int result = pfr.get<int>();
@@ -118,14 +131,14 @@ void MainScene::onUpdate()
 							color.b = palette[result % palette.size()].b;
 						}
 					}
-					auto& instancingComponent = instance.getComponent<ns::InstancingComponent<ns::BasicLightInstancingMaterial>>();
-					instancingMat.interop.color[instancingComponent.instancingIdx] = {color.r, color.g, color.b, color.a};
+					instancingMat.updateInstance(instance);
 				}
 			}
 		}
 		instancingMat.interop.bIsDirty = true;
 	}
 	bIsUpdate = true;
+	bIsCompile = false;
 }
 
 }	 // namespace vst

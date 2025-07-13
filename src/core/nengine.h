@@ -6,6 +6,7 @@
 #include "common/logger.h"
 #include "common/nsVector.h"
 #include "common/nsTransform.h"
+#include "common/nsRandom.h"
 #include "common/nsMat.h"
 
 #include "platform/platformEvent.h"

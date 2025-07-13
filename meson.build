@@ -27,6 +27,7 @@ dep_list =[
 nsgraphics_src =[
 'src/core/common/logger.cpp',
 'src/core/common/nsTransform.cpp',
+'src/core/common/nsRandom.cpp',
 
 'src/core/scene/nsScene.cpp',
 'src/core/entity/actorEntity.cpp',
